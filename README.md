@@ -38,8 +38,16 @@ scala> val biojavaContext = new BiojavaAdamContext(sc)
 biojavaContext: org.biojava.nbio.adam.BiojavaAdamContext = org.biojava.nbio.adam.BiojavaAdamContext@1e041848
 
 scala> val reads = biojavaContext.biojavaLoadFastq("fastq_sample1.fq")
-reads: org.apache.spark.rdd.RDD[org.bdgenomics.formats.avro.Read] = MapPartitionsRDD[1] at map at BiojavaAdamContext.java:136
+reads: org.apache.spark.rdd.RDD[org.bdgenomics.formats.avro.Read] = MapPartitionsRDD[1]
+  at map at BiojavaAdamContext.java:136
 
 scala> reads.first
-res0: org.bdgenomics.formats.avro.Read = {"name": "H06HDADXX130110:2:2116:3345:91806/1", "description": "H06HDADXX130110:2:2116:3345:91806/1", "alphabet": "DNA", "sequence": "GTTAGGGTTAGGGTTGGGTTAGGGTTAGGGTTAGGGTTAGGGGTAGGGTTAGGGTTAGGGGTAGGGTTAGGGTTAGGGTTAGGGTTAGGGTTAGGGGTAGGGCTAGGGTTAAGGGTAGGGTTAGCGAAAGGGCTGGGGTTAGGGGTGCGGGTACGCGTAGCATTAGGGCTAGAAGTAGGATCTGCAGTGCCTGACCGCGTCTGCGCGGCGACTGCCCAAAGCCTGGGGCCGACTCCAGGCTGAAGCTCAT", "length": 250, "qualityScores": ">=<=???>?>???=??>>8<?><=2=<===1194<?;:?>>?#3==>###########################################################################################################################################################################################################", "qualityScoreVariant": "FASTQ_SANGER"}
+res0: org.bdgenomics.formats.avro.Read = {"name": "H06HDADXX130110:2:2116:3345:91806/1", "description":
+"H06HDADXX130110:2:2116:3345:91806/1", "alphabet": "DNA", "sequence": "GTTAGGGTTAGGGTTGGGTTAGGGTTAGGGTT
+AGGGTTAGGGGTAGGGTTAGGGTTAGGGGTAGGGTTAGGGTTAGGGTTAGGGTTAGGGTTAGGGGTAGGGCTAGGGTTAAGGGTAGGGTTAGCGAAAGGGCTG
+GGGTTAGGGGTGCGGGTACGCGTAGCATTAGGGCTAGAAGTAGGATCTGCAGTGCCTGACCGCGTCTGCGCGGCGACTGCCCAAAGCCTGGGGCCGACTCCAG
+GCTGAAGCTCAT", "length": 250, "qualityScores": ">=<=???>?>???=??>>8<?><=2=<===1194<?;:?>>?#3==>########
+#######################################################################################################
+############################################################################################",
+"qualityScoreVariant": "FASTQ_SANGER"}
 ```
