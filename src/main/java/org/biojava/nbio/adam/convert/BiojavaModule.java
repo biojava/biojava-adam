@@ -39,7 +39,12 @@ import org.bdgenomics.formats.avro.Dbxref;
 import org.bdgenomics.formats.avro.Feature;
 import org.bdgenomics.formats.avro.OntologyTerm;
 import org.bdgenomics.formats.avro.Read;
+import org.bdgenomics.formats.avro.Sequence;
 import org.bdgenomics.formats.avro.Strand;
+
+import org.biojava.nbio.core.sequence.DNASequence;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.RNASequence;
 
 import org.biojava.nbio.sequencing.io.fastq.Fastq;
 import org.biojava.nbio.sequencing.io.fastq.FastqVariant;
@@ -74,5 +79,20 @@ public final class BiojavaModule extends AbstractModule {
     @Provides @Singleton
     Converter<Read, Fastq> createReadToFastq(final Converter<QualityScoreVariant, FastqVariant> fastqVariantConverter) {
         return new ReadToFastq(fastqVariantConverter);
+    }
+
+    @Provides @Singleton
+    Converter<DNASequence, Sequence> createDnaSequenceToSequence() {
+        return new DnaSequenceToSequence();
+    }
+
+    @Provides @Singleton
+    Converter<ProteinSequence, Sequence> createProteinSequenceToSequence() {
+        return new ProteinSequenceToSequence();
+    }
+
+    @Provides @Singleton
+    Converter<RNASequence, Sequence> createRnaSequenceToSequence() {
+        return new RnaSequenceToSequence();
     }
 }
