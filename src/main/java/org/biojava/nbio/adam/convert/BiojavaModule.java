@@ -72,6 +72,11 @@ public final class BiojavaModule extends AbstractModule {
     }
 
     @Provides @Singleton
+    Converter<org.biojava.nbio.core.sequence.Strand, Strand> createBiojavaStrandToBdgenomicsStrand() {
+        return new BiojavaStrandToBdgenomicsStrand();
+    }
+
+    @Provides @Singleton
     Converter<Fastq, Read> createFastqToRead(final Converter<FastqVariant, QualityScoreVariant> fastqVariantConverter) {
         return new FastqToRead(fastqVariantConverter);
     }
@@ -79,6 +84,16 @@ public final class BiojavaModule extends AbstractModule {
     @Provides @Singleton
     Converter<Read, Fastq> createReadToFastq(final Converter<QualityScoreVariant, FastqVariant> fastqVariantConverter) {
         return new ReadToFastq(fastqVariantConverter);
+    }
+
+    @Provides @Singleton
+    Converter<DNASequence, List<Feature>> createDnaSequenceToFeatures(final Converter<org.biojava.nbio.core.sequence.Strand, Strand> strandConverter) {
+        return new DnaSequenceToFeatures(strandConverter);
+    }
+
+    @Provides @Singleton
+    Converter<ProteinSequence, List<Feature>> createProteinSequenceToFeatures(final Converter<org.biojava.nbio.core.sequence.Strand, Strand> strandConverter) {
+        return new ProteinSequenceToFeatures(strandConverter);
     }
 
     @Provides @Singleton
