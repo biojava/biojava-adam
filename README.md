@@ -1,6 +1,6 @@
 # biojava-adam
 
-###Hacking biojava-adam
+### Hacking biojava-adam
 
 Install
 
