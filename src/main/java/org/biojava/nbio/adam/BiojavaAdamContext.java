@@ -53,6 +53,8 @@ import org.apache.spark.rdd.RDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
+import org.apache.spark.storage.StorageLevel;
+
 import org.bdgenomics.adam.rdd.ADAMContext;
 
 import org.bdgenomics.adam.rdd.feature.FeatureRDD;
@@ -81,6 +83,8 @@ import org.biojava.nbio.adam.convert.BiojavaModule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import scala.Some;
 
 /**
  * Extends ADAMContext with load methods for BioJava models.
@@ -183,7 +187,7 @@ public class BiojavaAdamContext extends ADAMContext {
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(collect(FastaReaderHelper.readFastaDNASequence(inputStream)));
             JavaRDD<Feature> features = dnaSequences.flatMap(sequence -> dnaSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
-            return FeatureRDD.apply(features.rdd());
+            return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
         }
     }
 
@@ -215,7 +219,7 @@ public class BiojavaAdamContext extends ADAMContext {
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<ProteinSequence> proteinSequences = javaSparkContext.parallelize(collect(FastaReaderHelper.readFastaProteinSequence(inputStream)));
             JavaRDD<Feature> features = proteinSequences.flatMap(sequence -> proteinSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
-            return FeatureRDD.apply(features.rdd());
+            return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
         }
     }
 
@@ -247,7 +251,7 @@ public class BiojavaAdamContext extends ADAMContext {
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(collect(GenbankReaderHelper.readGenbankDNASequence(inputStream)));
             JavaRDD<Feature> features = dnaSequences.flatMap(sequence -> dnaSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
-            return FeatureRDD.apply(features.rdd());
+            return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
         }
     }
 
@@ -279,7 +283,7 @@ public class BiojavaAdamContext extends ADAMContext {
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<ProteinSequence> proteinSequences = javaSparkContext.parallelize(collect(GenbankReaderHelper.readGenbankProteinSequence(inputStream)));
             JavaRDD<Feature> features = proteinSequences.flatMap(sequence -> proteinSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
-            return FeatureRDD.apply(features.rdd());
+            return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
         }
     }
 
