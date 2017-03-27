@@ -37,7 +37,7 @@ import org.biojava.nbio.adam.BiojavaAdamContext
 scala> val biojavaContext = new BiojavaAdamContext(sc)
 biojavaContext: org.biojava.nbio.adam.BiojavaAdamContext = org.biojava.nbio.adam.BiojavaAdamContext@1e041848
 
-scala> val reads = biojavaContext.biojavaLoadFastq("fastq_sample1.fq")
+scala> val reads = biojavaContext.loadFastqReads("fastq_sample1.fq")
 reads: org.apache.spark.rdd.RDD[org.bdgenomics.formats.avro.Read] = MapPartitionsRDD[1]
   at map at BiojavaAdamContext.java:136
 

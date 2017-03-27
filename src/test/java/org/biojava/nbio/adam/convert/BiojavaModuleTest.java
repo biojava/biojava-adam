@@ -40,9 +40,11 @@ import org.bdgenomics.convert.ConversionStringency;
 
 import org.bdgenomics.convert.bdgenomics.BdgenomicsModule;
 
+import org.bdgenomics.formats.avro.Feature;
 import org.bdgenomics.formats.avro.QualityScoreVariant;
 import org.bdgenomics.formats.avro.Read;
 import org.bdgenomics.formats.avro.Sequence;
+import org.bdgenomics.formats.avro.Strand;
 
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
@@ -75,9 +77,12 @@ public final class BiojavaModuleTest {
         Target target = injector.getInstance(Target.class);
         assertNotNull(target.getQualityScoreVariantToFastqVariant());
         assertNotNull(target.getFastqVariantToQualityScoreVariant());
+        assertNotNull(target.getBiojavaStrandToBdgenomicsStrand());
         assertNotNull(target.getFastqToRead());
         assertNotNull(target.getReadToFastq());
+        assertNotNull(target.getDnaSequenceToFeatures());
         assertNotNull(target.getDnaSequenceToSequence());
+        assertNotNull(target.getProteinSequenceToFeatures());
         assertNotNull(target.getProteinSequenceToSequence());
         assertNotNull(target.getRnaSequenceToSequence());
     }
@@ -88,26 +93,35 @@ public final class BiojavaModuleTest {
     static class Target {
         Converter<QualityScoreVariant, FastqVariant> qualityScoreVariantToFastqVariant;
         Converter<FastqVariant, QualityScoreVariant> fastqVariantToQualityScoreVariant;
+        Converter<org.biojava.nbio.core.sequence.Strand, Strand> biojavaStrandToBdgenomicsStrand;
         Converter<Fastq, Read> fastqToRead;
         Converter<Read, Fastq> readToFastq;
+        Converter<DNASequence, List<Feature>> dnaSequenceToFeatures;
         Converter<DNASequence, Sequence> dnaSequenceToSequence;
+        Converter<ProteinSequence, List<Feature>> proteinSequenceToFeatures;
         Converter<ProteinSequence, Sequence> proteinSequenceToSequence;
         Converter<RNASequence, Sequence> rnaSequenceToSequence;
 
         @Inject
         Target(final Converter<QualityScoreVariant, FastqVariant> qualityScoreVariantToFastqVariant,
                final Converter<FastqVariant, QualityScoreVariant> fastqVariantToQualityScoreVariant,
+               final Converter<org.biojava.nbio.core.sequence.Strand, Strand> biojavaStrandToBdgenomicsStrand,
                final Converter<Fastq, Read> fastqToRead,
                final Converter<Read, Fastq> readToFastq,
+               final Converter<DNASequence, List<Feature>> dnaSequenceToFeatures,
                final Converter<DNASequence, Sequence> dnaSequenceToSequence,
+               final Converter<ProteinSequence, List<Feature>> proteinSequenceToFeatures,
                final Converter<ProteinSequence, Sequence> proteinSequenceToSequence,
                final Converter<RNASequence, Sequence> rnaSequenceToSequence) {
 
             this.qualityScoreVariantToFastqVariant = qualityScoreVariantToFastqVariant;
             this.fastqVariantToQualityScoreVariant = fastqVariantToQualityScoreVariant;
+            this.biojavaStrandToBdgenomicsStrand = biojavaStrandToBdgenomicsStrand;
             this.fastqToRead = fastqToRead;
             this.readToFastq = readToFastq;
+            this.dnaSequenceToFeatures = dnaSequenceToFeatures;
             this.dnaSequenceToSequence = dnaSequenceToSequence;
+            this.proteinSequenceToFeatures = proteinSequenceToFeatures;
             this.proteinSequenceToSequence = proteinSequenceToSequence;
             this.rnaSequenceToSequence = rnaSequenceToSequence;
         }
@@ -120,6 +134,10 @@ public final class BiojavaModuleTest {
             return fastqVariantToQualityScoreVariant;
         }
 
+        Converter<org.biojava.nbio.core.sequence.Strand, Strand> getBiojavaStrandToBdgenomicsStrand() {
+            return biojavaStrandToBdgenomicsStrand;
+        }
+
         Converter<Fastq, Read> getFastqToRead() {
             return fastqToRead;
         }
@@ -128,8 +146,16 @@ public final class BiojavaModuleTest {
             return readToFastq;
         }
 
+        Converter<DNASequence, List<Feature>> getDnaSequenceToFeatures() {
+            return dnaSequenceToFeatures;
+        }
+
         Converter<DNASequence, Sequence> getDnaSequenceToSequence() {
             return dnaSequenceToSequence;
+        }
+
+        Converter<ProteinSequence, List<Feature>> getProteinSequenceToFeatures() {
+            return proteinSequenceToFeatures;
         }
 
         Converter<ProteinSequence, Sequence> getProteinSequenceToSequence() {
