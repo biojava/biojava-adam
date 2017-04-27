@@ -97,6 +97,11 @@ public final class BiojavaModule extends AbstractModule {
     }
 
     @Provides @Singleton
+    Converter<RNASequence, List<Feature>> createRnaSequenceToFeatures(final Converter<org.biojava.nbio.core.sequence.Strand, Strand> strandConverter) {
+        return new RnaSequenceToFeatures(strandConverter);
+    }
+
+    @Provides @Singleton
     Converter<DNASequence, Sequence> createDnaSequenceToSequence() {
         return new DnaSequenceToSequence();
     }

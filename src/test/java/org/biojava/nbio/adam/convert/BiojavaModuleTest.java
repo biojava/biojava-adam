@@ -84,6 +84,7 @@ public final class BiojavaModuleTest {
         assertNotNull(target.getDnaSequenceToSequence());
         assertNotNull(target.getProteinSequenceToFeatures());
         assertNotNull(target.getProteinSequenceToSequence());
+        assertNotNull(target.getRnaSequenceToFeatures());
         assertNotNull(target.getRnaSequenceToSequence());
     }
 
@@ -100,6 +101,7 @@ public final class BiojavaModuleTest {
         Converter<DNASequence, Sequence> dnaSequenceToSequence;
         Converter<ProteinSequence, List<Feature>> proteinSequenceToFeatures;
         Converter<ProteinSequence, Sequence> proteinSequenceToSequence;
+        Converter<RNASequence, List<Feature>> rnaSequenceToFeatures;
         Converter<RNASequence, Sequence> rnaSequenceToSequence;
 
         @Inject
@@ -112,6 +114,7 @@ public final class BiojavaModuleTest {
                final Converter<DNASequence, Sequence> dnaSequenceToSequence,
                final Converter<ProteinSequence, List<Feature>> proteinSequenceToFeatures,
                final Converter<ProteinSequence, Sequence> proteinSequenceToSequence,
+               final Converter<RNASequence, List<Feature>> rnaSequenceToFeatures,
                final Converter<RNASequence, Sequence> rnaSequenceToSequence) {
 
             this.qualityScoreVariantToFastqVariant = qualityScoreVariantToFastqVariant;
@@ -123,6 +126,7 @@ public final class BiojavaModuleTest {
             this.dnaSequenceToSequence = dnaSequenceToSequence;
             this.proteinSequenceToFeatures = proteinSequenceToFeatures;
             this.proteinSequenceToSequence = proteinSequenceToSequence;
+            this.rnaSequenceToFeatures = rnaSequenceToFeatures;
             this.rnaSequenceToSequence = rnaSequenceToSequence;
         }
 
@@ -160,6 +164,10 @@ public final class BiojavaModuleTest {
 
         Converter<ProteinSequence, Sequence> getProteinSequenceToSequence() {
             return proteinSequenceToSequence;
+        }
+
+        Converter<RNASequence, List<Feature>> getRnaSequenceToFeatures() {
+            return rnaSequenceToFeatures;
         }
 
         Converter<RNASequence, Sequence> getRnaSequenceToSequence() {
