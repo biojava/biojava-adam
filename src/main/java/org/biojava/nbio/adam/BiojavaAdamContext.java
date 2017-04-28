@@ -69,12 +69,24 @@ import org.bdgenomics.formats.avro.Feature;
 import org.bdgenomics.formats.avro.Read;
 import org.bdgenomics.formats.avro.Sequence;
 
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
+
 import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.RNASequence;
 
+import org.biojava.nbio.core.sequence.compound.AmbiguityDNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.AmbiguityRNACompoundSet;
+import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
+
+import org.biojava.nbio.core.sequence.io.DNASequenceCreator;
+import org.biojava.nbio.core.sequence.io.FastaReader;
 import org.biojava.nbio.core.sequence.io.FastaReaderHelper;
+import org.biojava.nbio.core.sequence.io.GenbankReader;
 import org.biojava.nbio.core.sequence.io.GenbankReaderHelper;
+import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser;
+import org.biojava.nbio.core.sequence.io.GenericGenbankHeaderParser;
+import org.biojava.nbio.core.sequence.io.RNASequenceCreator;
 
 import org.biojava.nbio.sequencing.io.fastq.Fastq;
 import org.biojava.nbio.sequencing.io.fastq.FastqReader;
@@ -177,25 +189,9 @@ public class BiojavaAdamContext extends ADAMContext {
     public RDD<Sequence> loadFastaDna(final String path) throws IOException {
         log().info("Loading " + path + " in FASTA format as DNA sequences...");
         try (InputStream inputStream = inputStream(path)) {
-            JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(collect(FastaReaderHelper.readFastaDNASequence(inputStream)));
+            JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(readFastaDna(inputStream));
             JavaRDD<Sequence> sequences = dnaSequences.map(dnaSequence -> dnaSequenceConverter.convert(dnaSequence, ConversionStringency.STRICT, log()));
             return sequences.rdd();
-        }
-    }
-
-    /**
-     * Load the specified path in FASTA format as DNA sequence features.
-     *
-     * @param path path in FASTA format, must not be null
-     * @return RDD of DNA sequence features
-     * @throws IOException if an I/O error occurs
-     */
-    public FeatureRDD loadFastaDnaFeatures(final String path) throws IOException {
-        log().info("Loading " + path + " in FASTA format as DNA sequence features...");
-        try (InputStream inputStream = inputStream(path)) {
-            JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(collect(FastaReaderHelper.readFastaDNASequence(inputStream)));
-            JavaRDD<Feature> features = dnaSequences.flatMap(sequence -> dnaSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
-            return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
         }
     }
 
@@ -216,22 +212,6 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in FASTA format as protein sequence features.
-     *
-     * @param path path in FASTA format, must not be null
-     * @return RDD of protein sequence features
-     * @throws IOException if an I/O error occurs
-     */
-    public FeatureRDD loadFastaProteinFeatures(final String path) throws IOException {
-        log().info("Loading " + path + " in FASTA format as protein sequence features...");
-        try (InputStream inputStream = inputStream(path)) {
-            JavaRDD<ProteinSequence> proteinSequences = javaSparkContext.parallelize(collect(FastaReaderHelper.readFastaProteinSequence(inputStream)));
-            JavaRDD<Feature> features = proteinSequences.flatMap(sequence -> proteinSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
-            return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
-        }
-    }
-
-    /**
      * Load the specified path in FASTA format as RNA sequences.
      *
      * @param path path in FASTA format, must not be null
@@ -241,25 +221,9 @@ public class BiojavaAdamContext extends ADAMContext {
     public RDD<Sequence> loadFastaRna(final String path) throws IOException {
         log().info("Loading " + path + " in FASTA format as RNA sequences...");
         try (InputStream inputStream = inputStream(path)) {
-            JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(collect(FastaReaderHelper.readFastaRNASequence(inputStream)));
+            JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(readFastaRna(inputStream));
             JavaRDD<Sequence> sequences = rnaSequences.map(rnaSequence -> rnaSequenceConverter.convert(rnaSequence, ConversionStringency.STRICT, log()));
             return sequences.rdd();
-        }
-    }
-
-    /**
-     * Load the specified path in FASTA format as RNA sequence features.
-     *
-     * @param path path in FASTA format, must not be null
-     * @return RDD of RNA sequence features
-     * @throws IOException if an I/O error occurs
-     */
-    public FeatureRDD loadFastaRnaFeatures(final String path) throws IOException {
-        log().info("Loading " + path + " in FASTA format as RNA sequence features...");
-        try (InputStream inputStream = inputStream(path)) {
-            JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(collect(FastaReaderHelper.readFastaRNASequence(inputStream)));
-            JavaRDD<Feature> features = rnaSequences.flatMap(sequence -> rnaSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
-            return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
         }
     }
 
@@ -273,7 +237,7 @@ public class BiojavaAdamContext extends ADAMContext {
     public RDD<Sequence> loadGenbankDna(final String path) throws Exception {
         log().info("Loading " + path + " in Genbank format as DNA sequences...");
         try (InputStream inputStream = inputStream(path)) {
-            JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(collect(GenbankReaderHelper.readGenbankDNASequence(inputStream)));
+            JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(readGenbankDna(inputStream));
             JavaRDD<Sequence> sequences = dnaSequences.map(dnaSequence -> dnaSequenceConverter.convert(dnaSequence, ConversionStringency.STRICT, log()));
             return sequences.rdd();
         }
@@ -289,7 +253,7 @@ public class BiojavaAdamContext extends ADAMContext {
     public FeatureRDD loadGenbankDnaFeatures(final String path) throws Exception {
         log().info("Loading " + path + " in Genbank format as DNA sequence features...");
         try (InputStream inputStream = inputStream(path)) {
-            JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(collect(GenbankReaderHelper.readGenbankDNASequence(inputStream)));
+            JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(readGenbankDna(inputStream));
             JavaRDD<Feature> features = dnaSequences.flatMap(sequence -> dnaSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
             return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
         }
@@ -337,7 +301,7 @@ public class BiojavaAdamContext extends ADAMContext {
     public RDD<Sequence> loadGenbankRna(final String path) throws Exception {
         log().info("Loading " + path + " in Genbank format as RNA sequences...");
         try (InputStream inputStream = inputStream(path)) {
-            JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(collect(GenbankReaderHelper.readGenbankRNASequence(inputStream)));
+            JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(readGenbankRna(inputStream));
             JavaRDD<Sequence> sequences = rnaSequences.map(rnaSequence -> rnaSequenceConverter.convert(rnaSequence, ConversionStringency.STRICT, log()));
             return sequences.rdd();
         }
@@ -353,9 +317,79 @@ public class BiojavaAdamContext extends ADAMContext {
     public FeatureRDD loadGenbankRnaFeatures(final String path) throws Exception {
         log().info("Loading " + path + " in Genbank format as RNA sequence features...");
         try (InputStream inputStream = inputStream(path)) {
-            JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(collect(GenbankReaderHelper.readGenbankRNASequence(inputStream)));
+            JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(readGenbankRna(inputStream));
             JavaRDD<Feature> features = rnaSequences.flatMap(sequence -> rnaSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
             return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
+        }
+    }
+
+    /**
+     * Read DNA sequences with ambiguous bases from the specified input stream in FASTA format.
+     *
+     * @param inputStream input stream to read from
+     * @return a list of zero or more DNA sequences read from the specified input stream in FASTA format
+     */
+    static List<DNASequence> readFastaDna(final InputStream inputStream) throws IOException {
+        FastaReader<DNASequence, NucleotideCompound> fastaReader = new FastaReader<DNASequence, NucleotideCompound>(
+            inputStream,
+            new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
+            new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()));
+
+        return collect(fastaReader.process().values());
+    }
+
+    /**
+     * Read RNA sequences with ambiguous bases from the specified input stream in FASTA format.
+     *
+     * @param inputStream input stream to read from
+     * @return a list of zero or more RNA sequences read from the specified input stream in FASTA format
+     */
+    static List<RNASequence> readFastaRna(final InputStream inputStream) throws IOException {
+        FastaReader<RNASequence, NucleotideCompound> fastaReader = new FastaReader<RNASequence, NucleotideCompound>(
+            inputStream,
+            new GenericFastaHeaderParser<RNASequence, NucleotideCompound>(),
+            new RNASequenceCreator(AmbiguityRNACompoundSet.getRNACompoundSet()));
+
+        return collect(fastaReader.process().values());
+    }
+
+    /**
+     * Read DNA sequences with ambiguous bases from the specified input stream in Genbank format.
+     *
+     * @param inputStream input stream to read from
+     * @return a list of zero or more DNA sequences read from the specified input stream in Genbank format
+     */
+    static List<DNASequence> readGenbankDna(final InputStream inputStream) throws IOException {
+        GenbankReader<DNASequence, NucleotideCompound> genbankReader = new GenbankReader<DNASequence, NucleotideCompound>(
+            inputStream,
+            new GenericGenbankHeaderParser<DNASequence, NucleotideCompound>(),
+            new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()));
+
+        try {
+            return collect(genbankReader.process().values());
+        }
+        catch (CompoundNotFoundException e) {
+            throw new IOException(e);
+        }
+    }
+
+    /**
+     * Read RNA sequences with ambiguous bases from the specified input stream in Genbank format.
+     *
+     * @param inputStream input stream to read from
+     * @return a list of zero or more RNA sequences read from the specified input stream in Genbank format
+     */
+    static List<RNASequence> readGenbankRna(final InputStream inputStream) throws IOException {
+        GenbankReader<RNASequence, NucleotideCompound> genbankReader = new GenbankReader<RNASequence, NucleotideCompound>(
+            inputStream,
+            new GenericGenbankHeaderParser<RNASequence, NucleotideCompound>(),
+            new RNASequenceCreator(AmbiguityRNACompoundSet.getRNACompoundSet()));
+
+        try {
+            return collect(genbankReader.process().values());
+        }
+        catch (CompoundNotFoundException e) {
+            throw new IOException(e);
         }
     }
 
