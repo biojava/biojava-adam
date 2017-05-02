@@ -43,10 +43,15 @@ scala> val biojavaContext = new BiojavaAdamContext(sc)
 biojavaContext: org.biojava.nbio.adam.BiojavaAdamContext = org.biojava.nbio.adam.BiojavaAdamContext@1e041848
 
 scala> val reads = biojavaContext.loadFastqReads("fastq_sample1.fq")
-reads: org.apache.spark.rdd.RDD[org.bdgenomics.formats.avro.Read] = MapPartitionsRDD[1]
-  at map at BiojavaAdamContext.java:136
+reads: org.bdgenomics.adam.rdd.sequence.ReadRDD = ReadRDD(MapPartitionsRDD[1] at map at BiojavaAdamContext.java:180,SequenceDictionary{
+H06HDADXX130110:1:2103:11970:57672/2->250
+H06HDADXX130110:2:2116:3345:91806/2->250
+H06HDADXX130110:1:2103:11970:57672/1->250
+H06HDADXX130110:2:2116:3345:91806/1->250
+H06JUADXX130110:1:1108:6424:55322/1->250
+H06JUADXX130110:1:1108:6424:55322/2->250})
 
-scala> reads.first
+scala> reads.rdd.first
 res0: org.bdgenomics.formats.avro.Read = {"name": "H06HDADXX130110:2:2116:3345:91806/1", "description":
 "H06HDADXX130110:2:2116:3345:91806/1", "alphabet": "DNA", "sequence": "GTTAGGGTTAGGGTTGGGTTAGGGTTAGGGTT
 AGGGTTAGGGGTAGGGTTAGGGTTAGGGGTAGGGTTAGGGTTAGGGTTAGGGTTAGGGTTAGGGGTAGGGCTAGGGTTAAGGGTAGGGTTAGCGAAAGGGCTG
@@ -55,4 +60,16 @@ GCTGAAGCTCAT", "length": 250, "qualityScores": ">=<=???>?>???=??>>8<?><=2=<===11
 #######################################################################################################
 ############################################################################################",
 "qualityScoreVariant": "FASTQ_SANGER"}
+
+scala> val sequences = biojavaContext.loadGenbankDna("SCU49845.gb")
+sequences: org.bdgenomics.adam.rdd.sequence.SequenceRDD = SequenceRDD(MapPartitionsRDD[7] at map at BiojavaAdamContext.java:244,SequenceDictionary{
+U49845->5028})
+
+scala> sequences.rdd.first
+res1: org.bdgenomics.formats.avro.Sequence = {"name": "U49845", "description": "Saccharomyces cerevisiae
+TCP1-beta gene, partial cds; and Axl2p\n(AXL2) and Rev7p (REV7) genes, complete cds.", "alphabet": "DNA",
+"sequence": "GATCCTCCATATACAACGGTATCTCCACCTCAGGTTTAGATCTCAACAACGGAACCATTGCCGACATGAGACAGTTAGGTATCGTCGAGAGT
+TACAAGCTAAAACGAGCAGTAGTCAGCTCTGCATCTGAAGCCGCTGAAGTTCTACTAAGGGTGGATAACATCATCCGTGCAAGACCAAGAACCGCCAATAGACAA
+CATATGTAACATATTTAGGATATACCTCGAAAATAATAAACCGCCACACTGTCATTATTATAATTAGAAACAGAACGCAAAAATTATCCACTATATAATTCAAAG
+...
 ```

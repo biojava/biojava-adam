@@ -59,6 +59,9 @@ import org.bdgenomics.adam.rdd.ADAMContext;
 
 import org.bdgenomics.adam.rdd.feature.FeatureRDD;
 
+import org.bdgenomics.adam.rdd.sequence.ReadRDD;
+import org.bdgenomics.adam.rdd.sequence.SequenceRDD;
+
 import org.bdgenomics.convert.Converter;
 import org.bdgenomics.convert.ConversionException;
 import org.bdgenomics.convert.ConversionStringency;
@@ -169,13 +172,13 @@ public class BiojavaAdamContext extends ADAMContext {
      * @return RDD of reads
      * @throws IOException if an I/O error occurs
      */
-    public RDD<Read> loadFastqReads(final String path) throws IOException {
+    public ReadRDD loadFastqReads(final String path) throws IOException {
         log().info("Loading " + path + " in FASTQ format as reads...");
         FastqReader fastqReader = new SangerFastqReader();
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<Fastq> fastqs = javaSparkContext.parallelize(collect(fastqReader.read(inputStream)));
             JavaRDD<Read> reads = fastqs.map(fastq -> readConverter.convert(fastq, ConversionStringency.STRICT, log()));
-            return reads.rdd();
+            return ReadRDD.apply(reads.rdd());
         }
     }
 
@@ -186,12 +189,12 @@ public class BiojavaAdamContext extends ADAMContext {
      * @return RDD of DNA sequences
      * @throws IOException if an I/O error occurs
      */
-    public RDD<Sequence> loadFastaDna(final String path) throws IOException {
+    public SequenceRDD loadFastaDna(final String path) throws IOException {
         log().info("Loading " + path + " in FASTA format as DNA sequences...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(readFastaDna(inputStream));
             JavaRDD<Sequence> sequences = dnaSequences.map(dnaSequence -> dnaSequenceConverter.convert(dnaSequence, ConversionStringency.STRICT, log()));
-            return sequences.rdd();
+            return SequenceRDD.apply(sequences.rdd());
         }
     }
 
@@ -202,12 +205,12 @@ public class BiojavaAdamContext extends ADAMContext {
      * @return RDD of protein sequences
      * @throws IOException if an I/O error occurs
      */
-    public RDD<Sequence> loadFastaProtein(final String path) throws IOException {
+    public SequenceRDD loadFastaProtein(final String path) throws IOException {
         log().info("Loading " + path + " in FASTA format as protein sequences...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<ProteinSequence> proteinSequences = javaSparkContext.parallelize(collect(FastaReaderHelper.readFastaProteinSequence(inputStream)));
             JavaRDD<Sequence> sequences = proteinSequences.map(proteinSequence -> proteinSequenceConverter.convert(proteinSequence, ConversionStringency.STRICT, log()));
-            return sequences.rdd();
+            return SequenceRDD.apply(sequences.rdd());
         }
     }
 
@@ -218,12 +221,12 @@ public class BiojavaAdamContext extends ADAMContext {
      * @return RDD of RNA sequences
      * @throws IOException if an I/O error occurs
      */
-    public RDD<Sequence> loadFastaRna(final String path) throws IOException {
+    public SequenceRDD loadFastaRna(final String path) throws IOException {
         log().info("Loading " + path + " in FASTA format as RNA sequences...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(readFastaRna(inputStream));
             JavaRDD<Sequence> sequences = rnaSequences.map(rnaSequence -> rnaSequenceConverter.convert(rnaSequence, ConversionStringency.STRICT, log()));
-            return sequences.rdd();
+            return SequenceRDD.apply(sequences.rdd());
         }
     }
 
@@ -234,12 +237,12 @@ public class BiojavaAdamContext extends ADAMContext {
      * @return RDD of DNA sequences
      * @throws Exception if an I/O error occurs
      */
-    public RDD<Sequence> loadGenbankDna(final String path) throws Exception {
+    public SequenceRDD loadGenbankDna(final String path) throws Exception {
         log().info("Loading " + path + " in Genbank format as DNA sequences...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(readGenbankDna(inputStream));
             JavaRDD<Sequence> sequences = dnaSequences.map(dnaSequence -> dnaSequenceConverter.convert(dnaSequence, ConversionStringency.STRICT, log()));
-            return sequences.rdd();
+            return SequenceRDD.apply(sequences.rdd());
         }
     }
 
@@ -266,12 +269,12 @@ public class BiojavaAdamContext extends ADAMContext {
      * @return RDD of protein sequences
      * @throws Exception if an I/O error occurs
      */
-    public RDD<Sequence> loadGenbankProtein(final String path) throws Exception {
+    public SequenceRDD loadGenbankProtein(final String path) throws Exception {
         log().info("Loading " + path + " in Genbank format as protein sequences...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<ProteinSequence> proteinSequences = javaSparkContext.parallelize(collect(GenbankReaderHelper.readGenbankProteinSequence(inputStream)));
             JavaRDD<Sequence> sequences = proteinSequences.map(proteinSequence -> proteinSequenceConverter.convert(proteinSequence, ConversionStringency.STRICT, log()));
-            return sequences.rdd();
+            return SequenceRDD.apply(sequences.rdd());
         }
     }
 
@@ -298,12 +301,12 @@ public class BiojavaAdamContext extends ADAMContext {
      * @return RDD of RNA sequences
      * @throws Exception if an I/O error occurs
      */
-    public RDD<Sequence> loadGenbankRna(final String path) throws Exception {
+    public SequenceRDD loadGenbankRna(final String path) throws Exception {
         log().info("Loading " + path + " in Genbank format as RNA sequences...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(readGenbankRna(inputStream));
             JavaRDD<Sequence> sequences = rnaSequences.map(rnaSequence -> rnaSequenceConverter.convert(rnaSequence, ConversionStringency.STRICT, log()));
-            return sequences.rdd();
+            return SequenceRDD.apply(sequences.rdd());
         }
     }
 
