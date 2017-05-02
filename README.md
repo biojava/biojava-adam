@@ -1,5 +1,7 @@
 # biojava-adam
 
+BioJava and ADAM integration.
+
 ### Hacking biojava-adam
 
 Install
@@ -7,7 +9,6 @@ Install
  * JDK 1.8 or later, http://openjdk.java.net
  * Apache Maven 3.3.9 or later, http://maven.apache.org
  * Apache Spark 2.1.0 or later, http://spark.apache.org
- * ADAM: Genomic Data System 0.22.0 or later, https://github.com/bigdatagenomics/adam
 
 
 To build
@@ -15,11 +16,14 @@ To build
     $ mvn install
 
 
-To run in ADAM shell, add `target/biojava-adam-5.0.0-SNAPSHOT.jar` to the classpath (see https://github.com/bigdatagenomics/adam/issues/1349),
-specify `--conf spark.kryo.registrator=org.biojava.nbio.adam.BiojavaKryoRegistrator`, then
+To run
 
 ```
-$ adam-shell
+$ spark-shell \
+    --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
+    --conf spark.kryo.registrator=org.biojava.nbio.adam.BiojavaKryoRegistrator \
+    --jars target/biojava-adam-5.0.0-SNAPSHOT.jar
+
 Using SPARK_SHELL=/usr/local/bin/spark-shell
 Welcome to
       ____              __
