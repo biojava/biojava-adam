@@ -130,6 +130,7 @@ public class BiojavaAdamContext extends ADAMContext {
     /** Convert BioJava RNASequence to a list of bdg-formats Features. */
     private final Converter<RNASequence, List<Feature>> rnaSequenceFeaturesConverter;
 
+
     /**
      * Create a new BiojavaAdamContext with the specified Spark context.
      *
@@ -258,7 +259,7 @@ public class BiojavaAdamContext extends ADAMContext {
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(readGenbankDna(inputStream));
             JavaRDD<Feature> features = dnaSequences.flatMap(sequence -> dnaSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
-            return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
+            return FeatureRDD.apply(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
         }
     }
 
@@ -290,7 +291,7 @@ public class BiojavaAdamContext extends ADAMContext {
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<ProteinSequence> proteinSequences = javaSparkContext.parallelize(collect(GenbankReaderHelper.readGenbankProteinSequence(inputStream)));
             JavaRDD<Feature> features = proteinSequences.flatMap(sequence -> proteinSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
-            return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
+            return FeatureRDD.apply(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
         }
     }
 
@@ -322,7 +323,7 @@ public class BiojavaAdamContext extends ADAMContext {
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(readGenbankRna(inputStream));
             JavaRDD<Feature> features = rnaSequences.flatMap(sequence -> rnaSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
-            return FeatureRDD.inferSequenceDictionary(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
+            return FeatureRDD.apply(features.rdd(), new Some(StorageLevel.MEMORY_ONLY()));
         }
     }
 
