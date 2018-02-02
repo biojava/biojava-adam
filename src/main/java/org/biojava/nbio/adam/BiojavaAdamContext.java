@@ -59,7 +59,8 @@ import org.bdgenomics.adam.rdd.ADAMContext;
 
 import org.bdgenomics.adam.rdd.feature.FeatureRDD;
 
-import org.bdgenomics.adam.rdd.sequence.ReadRDD;
+import org.bdgenomics.adam.rdd.read.ReadRDD;
+
 import org.bdgenomics.adam.rdd.sequence.SequenceRDD;
 
 import org.bdgenomics.convert.Converter;
@@ -167,14 +168,25 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in FASTQ format as reads.
+     * Load the specified path in FASTQ format as reads with Biojava.  Alias for <code>loadBiojavaFastqReads</code>.
      *
      * @param path path in FASTQ format, must not be null
      * @return RDD of reads
      * @throws IOException if an I/O error occurs
      */
     public ReadRDD loadFastqReads(final String path) throws IOException {
-        log().info("Loading " + path + " in FASTQ format as reads...");
+        return loadBiojavaFastqReads(path);
+    }
+
+    /**
+     * Load the specified path in FASTQ format as reads with Biojava.
+     *
+     * @param path path in FASTQ format, must not be null
+     * @return RDD of reads
+     * @throws IOException if an I/O error occurs
+     */
+    public ReadRDD loadBiojavaFastqReads(final String path) throws IOException {
+        log().info("Loading " + path + " in FASTQ format as reads with Biojava...");
         FastqReader fastqReader = new SangerFastqReader();
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<Fastq> fastqs = javaSparkContext.parallelize(collect(fastqReader.read(inputStream)));
@@ -184,14 +196,14 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in FASTA format as DNA sequences.
+     * Load the specified path in FASTA format as DNA sequences with Biojava.
      *
      * @param path path in FASTA format, must not be null
      * @return RDD of DNA sequences
      * @throws IOException if an I/O error occurs
      */
-    public SequenceRDD loadFastaDna(final String path) throws IOException {
-        log().info("Loading " + path + " in FASTA format as DNA sequences...");
+    public SequenceRDD loadBiojavaFastaDna(final String path) throws IOException {
+        log().info("Loading " + path + " in FASTA format as DNA sequences with Biojava...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(readFastaDna(inputStream));
             JavaRDD<Sequence> sequences = dnaSequences.map(dnaSequence -> dnaSequenceConverter.convert(dnaSequence, ConversionStringency.STRICT, log()));
@@ -200,14 +212,14 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in FASTA format as protein sequences.
+     * Load the specified path in FASTA format as protein sequences with Biojava.
      *
      * @param path path in FASTA format, must not be null
      * @return RDD of protein sequences
      * @throws IOException if an I/O error occurs
      */
-    public SequenceRDD loadFastaProtein(final String path) throws IOException {
-        log().info("Loading " + path + " in FASTA format as protein sequences...");
+    public SequenceRDD loadBiojavaFastaProtein(final String path) throws IOException {
+        log().info("Loading " + path + " in FASTA format as protein sequences with Biojava...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<ProteinSequence> proteinSequences = javaSparkContext.parallelize(collect(FastaReaderHelper.readFastaProteinSequence(inputStream)));
             JavaRDD<Sequence> sequences = proteinSequences.map(proteinSequence -> proteinSequenceConverter.convert(proteinSequence, ConversionStringency.STRICT, log()));
@@ -216,14 +228,14 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in FASTA format as RNA sequences.
+     * Load the specified path in FASTA format as RNA sequences with Biojava.
      *
      * @param path path in FASTA format, must not be null
      * @return RDD of RNA sequences
      * @throws IOException if an I/O error occurs
      */
-    public SequenceRDD loadFastaRna(final String path) throws IOException {
-        log().info("Loading " + path + " in FASTA format as RNA sequences...");
+    public SequenceRDD loadBiojavaFastaRna(final String path) throws IOException {
+        log().info("Loading " + path + " in FASTA format as RNA sequences with Biojava...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(readFastaRna(inputStream));
             JavaRDD<Sequence> sequences = rnaSequences.map(rnaSequence -> rnaSequenceConverter.convert(rnaSequence, ConversionStringency.STRICT, log()));
@@ -232,14 +244,26 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in Genbank format as DNA sequences.
+     * Load the specified path in Genbank format as DNA sequences with Biojava.
+     * Alias for <code>loadBiojavaGenbankDna</code>.
      *
      * @param path path in Genbank format, must not be null
      * @return RDD of DNA sequences
      * @throws Exception if an I/O error occurs
      */
     public SequenceRDD loadGenbankDna(final String path) throws Exception {
-        log().info("Loading " + path + " in Genbank format as DNA sequences...");
+        return loadBiojavaGenbankDna(path);
+    }
+
+    /**
+     * Load the specified path in Genbank format as DNA sequences with Biojava.
+     *
+     * @param path path in Genbank format, must not be null
+     * @return RDD of DNA sequences
+     * @throws Exception if an I/O error occurs
+     */
+    public SequenceRDD loadBiojavaGenbankDna(final String path) throws Exception {
+        log().info("Loading " + path + " in Genbank format as DNA sequences with Biojava...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(readGenbankDna(inputStream));
             JavaRDD<Sequence> sequences = dnaSequences.map(dnaSequence -> dnaSequenceConverter.convert(dnaSequence, ConversionStringency.STRICT, log()));
@@ -248,14 +272,26 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in Genbank format as DNA sequence features.
+     * Load the specified path in Genbank format as DNA sequence features with Biojava.
+     * Alias for <code>loadBiojavaGenbankFeatures</code>.
      *
      * @param path path in Genbank format, must not be null
      * @return RDD of DNA sequence features
      * @throws Exception if an I/O error occurs
      */
     public FeatureRDD loadGenbankDnaFeatures(final String path) throws Exception {
-        log().info("Loading " + path + " in Genbank format as DNA sequence features...");
+        return loadBiojavaGenbankDnaFeatures(path);
+    }
+
+    /**
+     * Load the specified path in Genbank format as DNA sequence features with Biojava.
+     *
+     * @param path path in Genbank format, must not be null
+     * @return RDD of DNA sequence features
+     * @throws Exception if an I/O error occurs
+     */
+    public FeatureRDD loadBiojavaGenbankDnaFeatures(final String path) throws Exception {
+        log().info("Loading " + path + " in Genbank format as DNA sequence features with Biojava...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<DNASequence> dnaSequences = javaSparkContext.parallelize(readGenbankDna(inputStream));
             JavaRDD<Feature> features = dnaSequences.flatMap(sequence -> dnaSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
@@ -264,14 +300,26 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in Genbank format as protein sequences.
+     * Load the specified path in Genbank format as protein sequences with Biojava.
+     * Alias for <code>loadBiojavaGenbankProtein</code>.
      *
      * @param path path in Genbank format, must not be null
      * @return RDD of protein sequences
      * @throws Exception if an I/O error occurs
      */
     public SequenceRDD loadGenbankProtein(final String path) throws Exception {
-        log().info("Loading " + path + " in Genbank format as protein sequences...");
+        return loadBiojavaGenbankProtein(path);
+    }
+
+    /**
+     * Load the specified path in Genbank format as protein sequences with Biojava.
+     *
+     * @param path path in Genbank format, must not be null
+     * @return RDD of protein sequences
+     * @throws Exception if an I/O error occurs
+     */
+    public SequenceRDD loadBiojavaGenbankProtein(final String path) throws Exception {
+        log().info("Loading " + path + " in Genbank format as protein sequences with Biojava...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<ProteinSequence> proteinSequences = javaSparkContext.parallelize(collect(GenbankReaderHelper.readGenbankProteinSequence(inputStream)));
             JavaRDD<Sequence> sequences = proteinSequences.map(proteinSequence -> proteinSequenceConverter.convert(proteinSequence, ConversionStringency.STRICT, log()));
@@ -280,14 +328,26 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in Genbank format as protein sequence features.
+     * Load the specified path in Genbank format as protein sequence features with Biojava.
+     * Alias for <code>loadGenbankProteinFeatures</code>.
      *
      * @param path path in Genbank format, must not be null
      * @return RDD of protein sequence features
      * @throws Exception if an I/O error occurs
      */
     public FeatureRDD loadGenbankProteinFeatures(final String path) throws Exception {
-        log().info("Loading " + path + " in Genbank format as protein sequence features...");
+        return loadBiojavaGenbankProteinFeatures(path);
+    }
+
+    /**
+     * Load the specified path in Genbank format as protein sequence features with Biojava.
+     *
+     * @param path path in Genbank format, must not be null
+     * @return RDD of protein sequence features
+     * @throws Exception if an I/O error occurs
+     */
+    public FeatureRDD loadBiojavaGenbankProteinFeatures(final String path) throws Exception {
+        log().info("Loading " + path + " in Genbank format as protein sequence features with Biojava...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<ProteinSequence> proteinSequences = javaSparkContext.parallelize(collect(GenbankReaderHelper.readGenbankProteinSequence(inputStream)));
             JavaRDD<Feature> features = proteinSequences.flatMap(sequence -> proteinSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
@@ -296,14 +356,26 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in Genbank format as RNA sequences.
+     * Load the specified path in Genbank format as RNA sequences with Biojava.
+     * Alias for <code>loadBiojavaGenbankRna</code>.
      *
      * @param path path in Genbank format, must not be null
      * @return RDD of RNA sequences
      * @throws Exception if an I/O error occurs
      */
     public SequenceRDD loadGenbankRna(final String path) throws Exception {
-        log().info("Loading " + path + " in Genbank format as RNA sequences...");
+        return loadBiojavaGenbankRna(path);
+    }
+
+    /**
+     * Load the specified path in Genbank format as RNA sequences with Biojava.
+     *
+     * @param path path in Genbank format, must not be null
+     * @return RDD of RNA sequences
+     * @throws Exception if an I/O error occurs
+     */
+    public SequenceRDD loadBiojavaGenbankRna(final String path) throws Exception {
+        log().info("Loading " + path + " in Genbank format as RNA sequences with Biojava...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(readGenbankRna(inputStream));
             JavaRDD<Sequence> sequences = rnaSequences.map(rnaSequence -> rnaSequenceConverter.convert(rnaSequence, ConversionStringency.STRICT, log()));
@@ -312,14 +384,26 @@ public class BiojavaAdamContext extends ADAMContext {
     }
 
     /**
-     * Load the specified path in Genbank format as RNA sequence features.
+     * Load the specified path in Genbank format as RNA sequence features with Biojava.
+     * Alias for <code>loadBiojavaGenbankRnaFeatures</code>.
      *
      * @param path path in Genbank format, must not be null
      * @return RDD of RNA sequence features
      * @throws Exception if an I/O error occurs
      */
     public FeatureRDD loadGenbankRnaFeatures(final String path) throws Exception {
-        log().info("Loading " + path + " in Genbank format as RNA sequence features...");
+        return loadBiojavaGenbankRnaFeatures(path);
+    }
+
+    /**
+     * Load the specified path in Genbank format as RNA sequence features with Biojava.
+     *
+     * @param path path in Genbank format, must not be null
+     * @return RDD of RNA sequence features
+     * @throws Exception if an I/O error occurs
+     */
+    public FeatureRDD loadBiojavaGenbankRnaFeatures(final String path) throws Exception {
+        log().info("Loading " + path + " in Genbank format as RNA sequence features with Biojava...");
         try (InputStream inputStream = inputStream(path)) {
             JavaRDD<RNASequence> rnaSequences = javaSparkContext.parallelize(readGenbankRna(inputStream));
             JavaRDD<Feature> features = rnaSequences.flatMap(sequence -> rnaSequenceFeaturesConverter.convert(sequence, ConversionStringency.STRICT, log()).iterator());
