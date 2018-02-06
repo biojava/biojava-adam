@@ -67,6 +67,8 @@
     <maven.enforcer.jdk-version>[1.8,)</maven.enforcer.jdk-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+    <scala.version>2.11.8</scala.version>
+    <scala.version.prefix>2.11</scala.version.prefix>
     <slf4j.version>1.7.25</slf4j.version>
     <spark.version>2.2.1</spark.version>
   </properties>
@@ -142,6 +144,11 @@
           <version>2.19.1</version>
         </plugin>
         <plugin>
+          <groupId>net.alchim31.maven</groupId>
+          <artifactId>scala-maven-plugin</artifactId>
+          <version>3.2.2</version>
+        </plugin>
+        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>templating-maven-plugin</artifactId>
           <version>1.0.0</version>
@@ -209,6 +216,58 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>scala-compile-first</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <args>
+                <arg>-g:vars</arg>
+              </args>
+            </configuration>
+          </execution>
+          <execution>
+            <id>scala-test-compile-first</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>attach-scaladocs</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>doc-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <scalaVersion>${scala.version}</scalaVersion>
+          <useZincServer>true</useZincServer>
+          <args>
+            <arg>-unchecked</arg>
+            <arg>-optimise</arg>
+            <arg>-deprecation</arg>
+          </args>
+          <jvmArgs>
+            <jvmArg>-Xms64m</jvmArg>
+            <jvmArg>-Xms1024m</jvmArg>
+            <jvmArg>-Xmx1024m</jvmArg>
+          </jvmArgs>
+          <javacArgs>
+            <javacArg>-source</javacArg>
+            <javacArg>${java.version}</javacArg>
+            <javacArg>-target</javacArg>
+            <javacArg>${java.version}</javacArg>
+          </javacArgs>
+        </configuration>
       </plugin>
     </plugins>
     <resources>
@@ -304,6 +363,11 @@
         <artifactId>slf4j-log4j12</artifactId>
         <version>${slf4j.version}</version>
       </dependency>
+      <dependency>
+        <groupId>net.codingwell</groupId>
+        <artifactId>scala-guice_${scala.version.prefix}</artifactId>
+        <version>4.1.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -351,6 +415,11 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.codingwell</groupId>
+      <artifactId>scala-guice_${scala.version.prefix}</artifactId>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
   <profiles>
