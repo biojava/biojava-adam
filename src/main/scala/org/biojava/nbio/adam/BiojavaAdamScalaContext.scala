@@ -78,7 +78,15 @@ import org.biojava.nbio.adam.convert.BiojavaModule
 
 import scala.collection.JavaConversions._
 
+import scala.util.{ Failure, Success }
+
 object BiojavaAdamScalaContext {
+
+  /**
+   * Create a new BiojavaAdamContext extending the specified ADAMContext.
+   *
+   * @param ac ADAMContext to extend.
+   */
   def apply(ac: ADAMContext): BiojavaAdamScalaContext = {
     val injector = Guice.createInjector(new BiojavaModule(), new BdgenomicsModule())
     val readConverter = injector.instance[Converter[Fastq, Read]]
@@ -102,6 +110,18 @@ object BiojavaAdamScalaContext {
   }
 }
 
+/**
+ * Extends ADAMContext with load methods for Biojava models.
+ *
+ * @param ac ADAMContext to extend.
+ * @param readConverter Convert Biojava Fastq to bdg-formats Read.
+ * @param dnaSequenceConverter Convert Biojava DNASequence to bdg-formats Sequence.
+ * @param dnaSequenceFeaturesConverter Convert Biojava DNASequence to a list of bdg-formats Features.
+ * @param proteinSequenceConverter Convert Biojava ProteinSequence to bdg-formats Sequence
+ * @param proteinSequenceFeaturesConverter Convert Biojava ProteinSequence to a list of bdg-formats Features
+ * @param rnaSequenceConverter Convert Biojava RNASequence to bdg-formats Sequence
+ * @param rnaSequenceFeaturesConverter Convert Biojava RNASequence to a list of bdg-formats Features
+ */
 class BiojavaAdamScalaContext
 (
   @transient val ac: ADAMContext,
@@ -114,18 +134,7 @@ class BiojavaAdamScalaContext
   val rnaSequenceFeaturesConverter: Converter[RNASequence, java.util.List[Feature]]
 ) extends Serializable with Logging {
 
-  /**
-   * Create and return an InputStream for the HDFS path represented by the specified file name.
-   *
-   * @param fileName file name, must not be null
-   * @return an InputStream for the HDFS path represented by the specified file name
-   * @throws IOException if an I/O error occurs
-   */
-  def openInputStream(fileName: String): InputStream = {
-    val path = new Path(fileName)
-    val fileSystem = path.getFileSystem(ac.sc.hadoopConfiguration)
-    fileSystem.open(path)
-  }
+  // FASTQ format
 
   /**
    * Load the specified path in FASTQ format as reads with Biojava.
@@ -136,10 +145,250 @@ class BiojavaAdamScalaContext
    */
   def loadBiojavaFastqReads(path: String): ReadRDD = {
     log.info(s"Loading $path in FASTQ format as reads with Biojava...")
+    TryWith(openInputStream(path))(inputStream => {
+      val fastqs = ac.sc.parallelize(readFastq(inputStream))
+      val reads = fastqs.map(readConverter.convert(_, ConversionStringency.STRICT, log))
+      ReadRDD(reads)
+    }) match {
+      case Success(r) => r
+      case Failure(e) => throw e
+    }
+  }
+
+  // FASTA format
+
+  /**
+   * Load the specified path in FASTA format as DNA sequences with Biojava.
+   *
+   * @param path path in FASTA format, must not be null
+   * @return RDD of DNA sequences
+   * @throws IOException if an I/O error occurs
+   */
+  def loadBiojavaFastaDna(path: String): SequenceRDD = {
+    log.info(s"Loading $path in FASTA format as DNA sequences with Biojava...")
+    TryWith(openInputStream(path))(inputStream => {
+      val dnaSequences = ac.sc.parallelize(readFastaDna(inputStream))
+      val sequences = dnaSequences.map(dnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      SequenceRDD(sequences)
+    }) match {
+      case Success(s) => s
+      case Failure(e) => throw e
+    }
+  }
+
+  /**
+   * Load the specified path in FASTA format as protein sequences with Biojava.
+   *
+   * @param path path in FASTA format, must not be null
+   * @return RDD of protein sequences
+   * @throws IOException if an I/O error occurs
+   */
+  def loadBiojavaFastaProtein(path: String): SequenceRDD = {
+    log.info(s"Loading $path in FASTA format as protein sequences with Biojava...")
+    TryWith(openInputStream(path))(inputStream => {
+      val proteinSequences = ac.sc.parallelize(readFastaProtein(inputStream))
+      val sequences = proteinSequences.map(proteinSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      SequenceRDD(sequences)
+    }) match {
+      case Success(s) => s
+      case Failure(e) => throw e
+    }
+  }
+
+  /**
+   * Load the specified path in FASTA format as RNA sequences with Biojava.
+   *
+   * @param path path in FASTA format, must not be null
+   * @return RDD of RNA sequences
+   * @throws IOException if an I/O error occurs
+   */
+  def loadBiojavaFastaRna(path: String): SequenceRDD = {
+    log.info(s"Loading $path in FASTA format as RNA sequences with Biojava...")
+    TryWith(openInputStream(path))(inputStream => {
+      val rnaSequences = ac.sc.parallelize(readFastaRna(inputStream))
+      val sequences = rnaSequences.map(rnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      SequenceRDD(sequences)
+    }) match {
+      case Success(s) => s
+      case Failure(e) => throw e
+    }
+  }
+
+  // Genbank format
+
+  /**
+   * Load the specified path in Genbank format as DNA sequences with Biojava.
+   *
+   * @param path path in Genbank format, must not be null
+   * @return RDD of DNA sequences
+   * @throws IOException if an I/O error occurs
+   */
+  def loadBiojavaGenbankDna(path: String): SequenceRDD = {
+    log.info(s"Loading $path in Genbank format as DNA sequences with Biojava...")
+    TryWith(openInputStream(path))(inputStream => {
+      val dnaSequences = ac.sc.parallelize(readGenbankDna(inputStream))
+      val sequences = dnaSequences.map(dnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      SequenceRDD(sequences)
+    }) match {
+      case Success(s) => s
+      case Failure(e) => throw e
+    }
+  }
+
+  /**
+   * Load the specified path in Genbank format as DNA sequence features with Biojava.
+   *
+   * @param path path in Genbank format, must not be null
+   * @return RDD of DNA sequence features
+   * @throws Exception if an I/O error occurs
+   */
+  def loadBiojavaGenbankDnaFeatures(path: String): FeatureRDD = {
+    log.info(s"Loading $path in Genbank format as DNA sequence features with Biojava...")
+    TryWith(openInputStream(path))(inputStream => {
+      val dnaSequences = ac.sc.parallelize(readGenbankDna(inputStream))
+      val features = dnaSequences.flatMap(dnaSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, log))
+      FeatureRDD(features)
+    }) match {
+      case Success(f) => f
+      case Failure(e) => throw e
+    }
+  }
+
+  /**
+   * Load the specified path in Genbank format as protein sequences with Biojava.
+   *
+   * @param path path in Genbank format, must not be null
+   * @return RDD of protein sequences
+   * @throws IOException if an I/O error occurs
+   */
+  def loadBiojavaGenbankProtein(path: String): SequenceRDD = {
+    log.info(s"Loading $path in Genbank format as protein sequences with Biojava...")
+    TryWith(openInputStream(path))(inputStream => {
+      val proteinSequences = ac.sc.parallelize(readGenbankProtein(inputStream))
+      val sequences = proteinSequences.map(proteinSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      SequenceRDD(sequences)
+    }) match {
+      case Success(s) => s
+      case Failure(e) => throw e
+    }
+  }
+
+  /**
+   * Load the specified path in Genbank format as protein sequence features with Biojava.
+   *
+   * @param path path in Genbank format, must not be null
+   * @return RDD of protein sequence features
+   * @throws Exception if an I/O error occurs
+   */
+  def loadBiojavaGenbankProteinFeatures(path: String): FeatureRDD = {
+    log.info(s"Loading $path in Genbank format as protein sequence features with Biojava...")
+    TryWith(openInputStream(path))(inputStream => {
+      val proteinSequences = ac.sc.parallelize(readGenbankProtein(inputStream))
+      val features = proteinSequences.flatMap(proteinSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, log))
+      FeatureRDD(features)
+    }) match {
+      case Success(f) => f
+      case Failure(e) => throw e
+    }
+  }
+
+  /**
+   * Load the specified path in Genbank format as RNA sequences with Biojava.
+   *
+   * @param path path in Genbank format, must not be null
+   * @return RDD of RNA sequences
+   * @throws IOException if an I/O error occurs
+   */
+  def loadBiojavaGenbankRna(path: String): SequenceRDD = {
+    log.info(s"Loading $path in Genbank format as RNA sequences with Biojava...")
+    TryWith(openInputStream(path))(inputStream => {
+      val rnaSequences = ac.sc.parallelize(readGenbankRna(inputStream))
+      val sequences = rnaSequences.map(rnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      SequenceRDD(sequences)
+    }) match {
+      case Success(s) => s
+      case Failure(e) => throw e
+    }
+  }
+
+  /**
+   * Load the specified path in Genbank format as RNA sequence features with Biojava.
+   *
+   * @param path path in Genbank format, must not be null
+   * @return RDD of RNA sequence features
+   * @throws Exception if an I/O error occurs
+   */
+  def loadBiojavaGenbankRnaFeatures(path: String): FeatureRDD = {
+    log.info(s"Loading $path in Genbank format as RNA sequence features with Biojava...")
+    TryWith(openInputStream(path))(inputStream => {
+      val rnaSequences = ac.sc.parallelize(readGenbankRna(inputStream))
+      val features = rnaSequences.flatMap(rnaSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, log))
+      FeatureRDD(features)
+    }) match {
+      case Success(f) => f
+      case Failure(e) => throw e
+    }
+  }
+
+  /**
+   * Create and return an InputStream for the HDFS path represented by the specified file name.
+   *
+   * @param fileName file name, must not be null
+   * @return an InputStream for the HDFS path represented by the specified file name
+   * @throws IOException if an I/O error occurs
+   */
+  private def openInputStream(fileName: String): InputStream = {
+    val path = new Path(fileName)
+    val fileSystem = path.getFileSystem(ac.sc.hadoopConfiguration)
+    fileSystem.open(path)
+  }
+
+  private def readFastq(inputStream: InputStream): Seq[Fastq] = {
     val fastqReader = new SangerFastqReader()
-    val inputStream = openInputStream(path)
-    val fastqs = ac.sc.parallelize(fastqReader.read(inputStream).iterator.toList)
-    val reads = fastqs.map(readConverter.convert(_, ConversionStringency.STRICT, log))
-    ReadRDD.apply(reads)
+    fastqReader.read(inputStream).iterator.toList
+  }
+
+  private def readFastaDna(inputStream: InputStream): Seq[DNASequence] = {
+    val fastaReader = new FastaReader[DNASequence, NucleotideCompound](
+      inputStream,
+      new GenericFastaHeaderParser[DNASequence, NucleotideCompound](),
+      new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()))
+
+    fastaReader.process.values.iterator.toList
+  }
+
+  private def readFastaProtein(inputStream: InputStream): Seq[ProteinSequence] = {
+    FastaReaderHelper.readFastaProteinSequence(inputStream).values.iterator.toList
+  }
+
+  private def readFastaRna(inputStream: InputStream): Seq[RNASequence] = {
+    val fastaReader = new FastaReader[RNASequence, NucleotideCompound](
+      inputStream,
+      new GenericFastaHeaderParser[RNASequence, NucleotideCompound](),
+      new RNASequenceCreator(AmbiguityRNACompoundSet.getRNACompoundSet()))
+
+    fastaReader.process.values.iterator.toList
+  }
+
+  private def readGenbankDna(inputStream: InputStream): Seq[DNASequence] = {
+    val genbankReader = new GenbankReader[DNASequence, NucleotideCompound](
+      inputStream,
+      new GenericGenbankHeaderParser[DNASequence, NucleotideCompound](),
+      new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()))
+
+    genbankReader.process.values.iterator.toList
+  }
+
+  private def readGenbankProtein(inputStream: InputStream): Seq[ProteinSequence] = {
+    GenbankReaderHelper.readGenbankProteinSequence(inputStream).values.iterator.toList
+  }
+
+  private def readGenbankRna(inputStream: InputStream): Seq[RNASequence] = {
+    val genbankReader = new GenbankReader[RNASequence, NucleotideCompound](
+      inputStream,
+      new GenericGenbankHeaderParser[RNASequence, NucleotideCompound](),
+      new RNASequenceCreator(AmbiguityRNACompoundSet.getRNACompoundSet()))
+
+    genbankReader.process.values.iterator.toList
   }
 }
