@@ -1,7 +1,7 @@
 /*
 
-    biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017 held jointly by the individual authors.
+    biojava-adam  Biojava and ADAM integration.
+    Copyright (c) 2017-2018 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -40,21 +40,21 @@ import org.biojava.nbio.sequencing.io.fastq.FastqVariant;
 import org.slf4j.Logger;
 
 /**
- * Convert BioJava Fastq to bdg-formats Read.
+ * Convert Biojava Fastq to bdg-formats Read.
  *
  * @author  Michael Heuer
  */
 @Immutable
 final class FastqToRead extends AbstractConverter<Fastq, Read> {
 
-    /** Convert BioJava FastqVariant to bdg-formats QualityScoreVariant. */
+    /** Convert Biojava FastqVariant to bdg-formats QualityScoreVariant. */
     final Converter<FastqVariant, QualityScoreVariant> fastqVariantConverter;
 
 
     /**
      * Package private no-arg constructor.
      *
-     * @param fastqVariantConverter convert BioJava FastqVariant to bdg-formats QualityScoreVariant, must not be null
+     * @param fastqVariantConverter convert Biojava FastqVariant to bdg-formats QualityScoreVariant, must not be null
      */
     FastqToRead(final Converter<FastqVariant, QualityScoreVariant> fastqVariantConverter) {
         super(Fastq.class, Read.class);
@@ -76,7 +76,7 @@ final class FastqToRead extends AbstractConverter<Fastq, Read> {
             .setName(nameFromDescription(fastq.getDescription()))
             .setDescription(fastq.getDescription())
             .setAlphabet(Alphabet.DNA)
-            .setSequence(fastq.getSequence())
+            .setSequence(fastq.getSequence().toUpperCase())
             .setLength(Long.valueOf(fastq.getSequence().length()))
             .setQualityScores(fastq.getQuality())
             .setQualityScoreVariant(fastqVariantConverter.convert(fastq.getVariant(), stringency, logger))

@@ -1,7 +1,7 @@
 /*
 
-    biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017 held jointly by the individual authors.
+    biojava-adam  Biojava and ADAM integration.
+    Copyright (c) 2017-2018 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -89,7 +89,7 @@ public final class FastqToReadTest {
     public void testConvert() {
         Fastq fastq = new FastqBuilder()
             .withDescription("read/1")
-            .withSequence("actg")
+            .withSequence("ACTG") // bdg-formats expects uppercase sequence tokens
             .withQuality("e896")
             .withVariant(FastqVariant.FASTQ_SANGER)
             .build();

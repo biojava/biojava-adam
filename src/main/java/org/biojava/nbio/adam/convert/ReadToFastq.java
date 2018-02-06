@@ -1,7 +1,7 @@
 /*
 
-    biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017 held jointly by the individual authors.
+    biojava-adam  Biojava and ADAM integration.
+    Copyright (c) 2017-2018 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -40,21 +40,21 @@ import org.biojava.nbio.sequencing.io.fastq.FastqVariant;
 import org.slf4j.Logger;
 
 /**
- * Convert bdg-formats Read to BioJava Fastq.
+ * Convert bdg-formats Read to Biojava Fastq.
  *
  * @author  Michael Heuer
  */
 @Immutable
 final class ReadToFastq extends AbstractConverter<Read, Fastq> {
 
-    /** Convert bdg-formats QualityScoreVariant to BioJava FastqVariant. */
+    /** Convert bdg-formats QualityScoreVariant to Biojava FastqVariant. */
     final Converter<QualityScoreVariant, FastqVariant> fastqVariantConverter;
 
 
     /**
      * Package private no-arg constructor.
      *
-     * @param fastqVariantConverter convert bdg-formats QualityScoreVariant to BioJava FastqVariant, must not be null
+     * @param fastqVariantConverter convert bdg-formats QualityScoreVariant to Biojava FastqVariant, must not be null
      */
     ReadToFastq(final Converter<QualityScoreVariant, FastqVariant> fastqVariantConverter) {
         super(Read.class, Fastq.class);

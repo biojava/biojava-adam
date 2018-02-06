@@ -1,7 +1,7 @@
 /*
 
-    biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017 held jointly by the individual authors.
+    biojava-adam  Biojava and ADAM integration.
+    Copyright (c) 2017-2018 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -36,7 +36,7 @@ import org.biojava.nbio.sequencing.io.fastq.FastqVariant;
 import org.slf4j.Logger;
 
 /**
- * Convert BioJava FastqVariant to bdg-formats QualityScoreVariant.
+ * Convert Biojava FastqVariant to bdg-formats QualityScoreVariant.
  *
  * @author  Michael Heuer
  */

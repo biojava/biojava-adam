@@ -21,8 +21,33 @@
     > http://www.opensource.org/licenses/lgpl-license.php
 
 */
+package org.biojava.nbio.adam
+
+import java.io.Closeable
+import scala.util.control.NonFatal
+import scala.util.{ Failure, Try }
 
 /**
- * Convert between Biojava and bdg-formats data models.
+ * Try with closeable resources.
  */
-package org.biojava.nbio.adam.convert;
+private[adam] object TryWith {
+  def apply[C <: Closeable, R](closeable: => C)(f: C => R): Try[R] =
+    Try(closeable).flatMap(c => {
+      try {
+        val rv = f(c)
+        Try(c.close()).map(_ => rv)
+      }
+      catch {
+        case NonFatal(exceptionInFunction) =>
+          try {
+            c.close()
+            Failure(exceptionInFunction)
+          }
+          catch {
+            case NonFatal(exceptionInClose) =>
+              exceptionInFunction.addSuppressed(exceptionInClose)
+              Failure(exceptionInFunction)
+          }
+      }
+    })
+}

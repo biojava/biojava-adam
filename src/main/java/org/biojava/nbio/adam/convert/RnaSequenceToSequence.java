@@ -1,7 +1,7 @@
 /*
 
-    biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017 held jointly by the individual authors.
+    biojava-adam  Biojava and ADAM integration.
+    Copyright (c) 2017-2018 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -37,7 +37,7 @@ import org.biojava.nbio.core.sequence.RNASequence;
 import org.slf4j.Logger;
 
 /**
- * Convert BioJava RNASequence to bdg-formats Sequence.
+ * Convert Biojava RNASequence to bdg-formats Sequence.
  *
  * @author  Michael Heuer
  */
@@ -45,7 +45,7 @@ import org.slf4j.Logger;
 final class RnaSequenceToSequence extends AbstractConverter<RNASequence, Sequence> {
 
     /**
-     * Convert BioJava RNASequence to bdg-formats Sequence.
+     * Convert Biojava RNASequence to bdg-formats Sequence.
      */
     RnaSequenceToSequence() {
         super(RNASequence.class, Sequence.class);
@@ -66,7 +66,7 @@ final class RnaSequenceToSequence extends AbstractConverter<RNASequence, Sequenc
             .setName(rnaSequence.getAccession().toString())
             .setDescription(rnaSequence.getDescription())
             .setAlphabet(Alphabet.RNA)
-            .setSequence(rnaSequence.getSequenceAsString())
+            .setSequence(rnaSequence.getSequenceAsString().toUpperCase())
             .setLength((long) rnaSequence.getLength());
 
         return sb.build();

@@ -1,7 +1,7 @@
 /*
 
-    biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017 held jointly by the individual authors.
+    biojava-adam  Biojava and ADAM integration.
+    Copyright (c) 2017-2018 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -32,7 +32,7 @@ import org.bdgenomics.convert.ConversionStringency;
 import org.slf4j.Logger;
 
 /**
- * Convert BioJava Strand to bdg-formats Strand.
+ * Convert Biojava Strand to bdg-formats Strand.
  *
  * @author  Michael Heuer
  */

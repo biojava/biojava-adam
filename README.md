@@ -1,6 +1,6 @@
 # biojava-adam
 
-BioJava and ADAM integration.
+[Biojava](http://biojava.org) and ADAM integration.
 
 ### Hacking biojava-adam
 
@@ -38,37 +38,58 @@ Type :help for more information.
 scala> import org.biojava.nbio.adam.BiojavaAdamContext
 import org.biojava.nbio.adam.BiojavaAdamContext
 
-scala> val biojavaContext = new BiojavaAdamContext(sc)
-biojavaContext: org.biojava.nbio.adam.BiojavaAdamContext = org.biojava.nbio.adam.BiojavaAdamContext@1e041848
+scala> val bc = BiojavaAdamContext(sc)
+bc: org.biojava.nbio.adam.BiojavaAdamContext = org.biojava.nbio.adam.BiojavaAdamContext@4f8900b0
 
-scala> val reads = biojavaContext.loadFastqReads("fastq_sample1.fq")
-reads: org.bdgenomics.adam.rdd.sequence.ReadRDD = ReadRDD(MapPartitionsRDD[1] at map at BiojavaAdamContext.java:180,SequenceDictionary{
-H06HDADXX130110:1:2103:11970:57672/2->250
-H06HDADXX130110:2:2116:3345:91806/2->250
-H06HDADXX130110:1:2103:11970:57672/1->250
-H06HDADXX130110:2:2116:3345:91806/1->250
-H06JUADXX130110:1:1108:6424:55322/1->250
-H06JUADXX130110:1:1108:6424:55322/2->250})
+scala> val reads = bc.loadFastqReads("src/test/resources/org/biojava/nbio/adam/bqsr.0.fq")
+reads: org.bdgenomics.adam.rdd.read.ReadRDD = RDDBoundReadRDD with 0 reference sequences
 
 scala> reads.rdd.first
-res0: org.bdgenomics.formats.avro.Read = {"name": "H06HDADXX130110:2:2116:3345:91806/1", "description":
-"H06HDADXX130110:2:2116:3345:91806/1", "alphabet": "DNA", "sequence": "GTTAGGGTTAGGGTTGGGTTAGGGTTAGGGTT
-AGGGTTAGGGGTAGGGTTAGGGTTAGGGGTAGGGTTAGGGTTAGGGTTAGGGTTAGGGTTAGGGGTAGGGCTAGGGTTAAGGGTAGGGTTAGCGAAAGGGCTG
-GGGTTAGGGGTGCGGGTACGCGTAGCATTAGGGCTAGAAGTAGGATCTGCAGTGCCTGACCGCGTCTGCGCGGCGACTGCCCAAAGCCTGGGGCCGACTCCAG
-GCTGAAGCTCAT", "length": 250, "qualityScores": ">=<=???>?>???=??>>8<?><=2=<===1194<?;:?>>?#3==>########
-#######################################################################################################
-############################################################################################",
-"qualityScoreVariant": "FASTQ_SANGER"}
+res0: org.bdgenomics.formats.avro.Read = {"name": "SRR062634.10022079/1", "description":
+"SRR062634.10022079/1", "alphabet": "DNA", "sequence": "AATTCAAAACCAGCCTGGCCAATATGGTGAAACCTCATCTCTACTAAAAA
+TACAAAAATTAGCCAGGCATGGTGGTGCGTGCGTGTAGTCCCAGCTACTT", "length": 100, "qualityScores": "?-DDBEEB=EEEDDEDEEEA
+:D?5?E?CEBE5ED?D:AEDEDEDED-B,BC0AC,BB6@CDBDEC?BCBAA@5,=8CA-?A>?2:&048<BB5BE#####", "qualityScoreVariant":
+"FASTQ_SANGER", "attributes": {}}
 
-scala> val sequences = biojavaContext.loadGenbankDna("SCU49845.gb")
-sequences: org.bdgenomics.adam.rdd.sequence.SequenceRDD = SequenceRDD(MapPartitionsRDD[7] at map at BiojavaAdamContext.java:244,SequenceDictionary{
-U49845->5028})
+scala> val dna = bc.loadBiojavaFastaDna("src/test/resources/org/biojava/nbio/adam/hla_gen.0.fa")
+dna: org.bdgenomics.adam.rdd.sequence.SequenceRDD = RDDBoundSequenceRDD with 0 reference sequences
 
-scala> sequences.rdd.first
-res1: org.bdgenomics.formats.avro.Sequence = {"name": "U49845", "description": "Saccharomyces cerevisiae
+scala> dna.rdd.first
+res0: org.bdgenomics.formats.avro.Sequence = {"name": "HLA:HLA00001 A*01:01:01:01 3503 bp",
+"description": null, "alphabet": "DNA", "sequence": "CAGGAGCAGAGGGGTCAGGGCGAAGTCCCAGGGCCCCAGGCGTGGCTCTCAG
+GGTCTCAGGCCCCGAAGGCGGTGTATGGATTGGGGAGTCCCAGCCTTGGGGATTCCCCAACTCCGCAGTTTCTTTTCTCCCTCTCCCAACCTACGTAGGGTCCTT
+CATCCTGGATACTCACGACGCGGACCCAGTTCTCACTCCCATTGGGTGTCGGGTTTCCAGAGAAGCCAATCAGTGTCGTCGCGGTCGCTGTTCTAAAGTCCGCAC
+...
+
+scala> val prot = bc.loadBiojavaFastaProtein("src/test/resources/org/biojava/nbio/adam/hla_prot.0.fa")
+prot: org.bdgenomics.adam.rdd.sequence.SequenceRDD = RDDBoundSequenceRDD with 0 reference sequences
+
+scala> prot.rdd.first
+res2: org.bdgenomics.formats.avro.Sequence = {"name": "HLA:HLA00001 A*01:01:01:01 365 bp", "description":
+null, "alphabet": "PROTEIN", "sequence": "MAVMAPRTLLLLLSGALALTQTWAGSHSMRYFFTSVSRPGRGEPRFIAVGYVDDTQFVRFDSD
+AASQKMEPRAPWIEQEGPEYWDQETRNMKAHSQTDRANLGTLRGYYNQSEDGSHTIQIMYGCDVGPDGRFLRGYRQDAYDGKDYIALNEDLRSWTAADMAAQITK
+RKWEAVHAAEQRRVYLEGRCVDGLRRYLENGKETLQRTDPPKTHMTHHPISDHEATLRCWALGFYPAEITLTWQRDGEDQTQDTELVETRPAGDGTFQKWAAVVV
+PSGEEQRYTCHVQHEGLPKPLTLRWELSSQPTIPIVGIIAGLVLLGAVITGAVVAAVMWRRKSSDRKGGSYTQAASSDSAQGSDVSLTACKV", "length":
+365, "attributes": {}}
+
+scala> val genbankDna = bc.loadGenbankDna("src/test/resources/org/biojava/nbio/adam/SCU49845.gb")
+genbankDna: org.bdgenomics.adam.rdd.sequence.SequenceRDD = RDDBoundSequenceRDD with 0 reference sequences
+
+scala> genbankDna.rdd.first
+res4: org.bdgenomics.formats.avro.Sequence = {"name": "U49845", "description": "Saccharomyces cerevisiae
 TCP1-beta gene, partial cds; and Axl2p\n(AXL2) and Rev7p (REV7) genes, complete cds.", "alphabet": "DNA",
 "sequence": "GATCCTCCATATACAACGGTATCTCCACCTCAGGTTTAGATCTCAACAACGGAACCATTGCCGACATGAGACAGTTAGGTATCGTCGAGAGT
 TACAAGCTAAAACGAGCAGTAGTCAGCTCTGCATCTGAAGCCGCTGAAGTTCTACTAAGGGTGGATAACATCATCCGTGCAAGACCAAGAACCGCCAATAGACAA
 CATATGTAACATATTTAGGATATACCTCGAAAATAATAAACCGCCACACTGTCATTATTATAATTAGAAACAGAACGCAAAAATTATCCACTATATAATTCAAAG
 ...
+
+scala> val features = bc.loadGenbankDnaFeatures("src/test/resources/org/biojava/nbio/adam/SCU49845.gb")
+features: org.bdgenomics.adam.rdd.feature.FeatureRDD = RDDBoundFeatureRDD with 0 reference sequences
+
+scala> features.rdd.first
+res5: org.bdgenomics.formats.avro.Feature = {"featureId": null, "name": "source", "source": null,
+"featureType": null, "contigName": "U49845", "start": 0, "end": 5028, "strand": "FORWARD", "phase":
+null, "frame": null, "score": null, "geneId": null, "transcriptId": null, "exonId": null, "aliases":
+[], "parentIds": [], "target": null, "gap": null, "derivesFrom": null, "notes": [], "dbxrefs": [],
+"ontologyTerms": [], "circular": null, "attributes": {}}
 ```

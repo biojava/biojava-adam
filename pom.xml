@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
-    biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017 held jointly by the individual authors.
+    biojava-adam  Biojava and ADAM integration.
+    Copyright (c) 2017-2018 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -34,7 +34,7 @@
   <packaging>jar</packaging>
   <name>biojava-adam</name>
   <version>5.0.0-SNAPSHOT</version>
-  <description>BioJava and ADAM integration.</description>
+  <description>Biojava and ADAM integration.</description>
   <url>http://www.biojava.org</url>
   <inceptionYear>2017</inceptionYear>
   <scm>
@@ -67,7 +67,8 @@
     <maven.enforcer.jdk-version>[1.8,)</maven.enforcer.jdk-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-    <scala.version>2.11.8</scala.version>
+    <scala-guice.version>4.1.0</scala-guice.version>
+    <scala.version>2.11.12</scala.version>
     <scala.version.prefix>2.11</scala.version.prefix>
     <slf4j.version>1.7.25</slf4j.version>
     <spark.version>2.2.1</spark.version>
@@ -294,18 +295,23 @@
         <version>${junit.version}</version>
       </dependency>
       <dependency>
+        <groupId>net.codingwell</groupId>
+        <artifactId>scala-guice_${scala.version.prefix}</artifactId>
+        <version>${scala-guice.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.spark</groupId>
-        <artifactId>spark-core_2.11</artifactId>
+        <artifactId>spark-core_${scala.version.prefix}</artifactId>
         <version>${spark.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.spark</groupId>
-        <artifactId>spark-sql_2.11</artifactId>
+        <artifactId>spark-sql_${scala.version.prefix}</artifactId>
         <version>${spark.version}</version>
       </dependency>
       <dependency>
         <groupId>org.bdgenomics.adam</groupId>
-        <artifactId>adam-core-spark2_2.11</artifactId>
+        <artifactId>adam-core-spark2_${scala.version.prefix}</artifactId>
         <version>${adam.version}</version>
         <exclusions>
           <exclusion>
@@ -363,11 +369,6 @@
         <artifactId>slf4j-log4j12</artifactId>
         <version>${slf4j.version}</version>
       </dependency>
-      <dependency>
-        <groupId>net.codingwell</groupId>
-        <artifactId>scala-guice_${scala.version.prefix}</artifactId>
-        <version>4.1.0</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -377,18 +378,23 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>net.codingwell</groupId>
+      <artifactId>scala-guice_${scala.version.prefix}</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.11</artifactId>
+      <artifactId>spark-core_${scala.version.prefix}</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-sql_2.11</artifactId>
+      <artifactId>spark-sql_${scala.version.prefix}</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.bdgenomics.adam</groupId>
-      <artifactId>adam-core-spark2_2.11</artifactId>
+      <artifactId>adam-core-spark2_${scala.version.prefix}</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -415,11 +421,6 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.codingwell</groupId>
-      <artifactId>scala-guice_${scala.version.prefix}</artifactId>
-      <scope>compile</scope>
     </dependency>
   </dependencies>
   <profiles>

@@ -1,7 +1,7 @@
 /*
 
-    biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017 held jointly by the individual authors.
+    biojava-adam  Biojava and ADAM integration.
+    Copyright (c) 2017-2018 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -37,7 +37,7 @@ import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.slf4j.Logger;
 
 /**
- * Convert BioJava ProteinSequence to bdg-formats Sequence.
+ * Convert Biojava ProteinSequence to bdg-formats Sequence.
  *
  * @author  Michael Heuer
  */
@@ -45,7 +45,7 @@ import org.slf4j.Logger;
 final class ProteinSequenceToSequence extends AbstractConverter<ProteinSequence, Sequence> {
 
     /**
-     * Convert BioJava ProteinSequence to bdg-formats Sequence.
+     * Convert Biojava ProteinSequence to bdg-formats Sequence.
      */
     ProteinSequenceToSequence() {
         super(ProteinSequence.class, Sequence.class);
@@ -66,7 +66,7 @@ final class ProteinSequenceToSequence extends AbstractConverter<ProteinSequence,
             .setName(proteinSequence.getAccession().toString())
             .setDescription(proteinSequence.getDescription())
             .setAlphabet(Alphabet.PROTEIN)
-            .setSequence(proteinSequence.getSequenceAsString())
+            .setSequence(proteinSequence.getSequenceAsString().toUpperCase())
             .setLength((long) proteinSequence.getLength());
 
         return sb.build();

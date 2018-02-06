@@ -1,7 +1,7 @@
 /*
 
-    biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017 held jointly by the individual authors.
+    biojava-adam  Biojava and ADAM integration.
+    Copyright (c) 2017-2018 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -46,21 +46,21 @@ import org.biojava.nbio.core.sequence.location.template.Point;
 import org.slf4j.Logger;
 
 /**
- * Convert BioJava DNASequence to a list of bdg-formats Features.
+ * Convert Biojava DNASequence to a list of bdg-formats Features.
  *
  * @author  Michael Heuer
  */
 @Immutable
 final class DnaSequenceToFeatures extends AbstractConverter<DNASequence, List<Feature>> {
 
-    /** Convert BioJava Strand to bdg-formats Strand. */
+    /** Convert Biojava Strand to bdg-formats Strand. */
     private final Converter<org.biojava.nbio.core.sequence.Strand, Strand> strandConverter;
 
 
     /**
-     * Convert BioJava DNASequence to a list of bdg-formats Features.
+     * Convert Biojava DNASequence to a list of bdg-formats Features.
      *
-     * @param strandConverter convert BioJava Strand to bdg-formats Strand, must not be null
+     * @param strandConverter convert Biojava Strand to bdg-formats Strand, must not be null
      */
     DnaSequenceToFeatures(final Converter<org.biojava.nbio.core.sequence.Strand, Strand> strandConverter) {
         super(DNASequence.class, List.class);

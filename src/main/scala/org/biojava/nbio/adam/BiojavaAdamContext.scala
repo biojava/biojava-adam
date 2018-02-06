@@ -1,7 +1,7 @@
 /*
 
-    biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017 held jointly by the individual authors.
+    biojava-adam  Biojava and ADAM integration.
+    Copyright (c) 2017-2018 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -80,14 +80,14 @@ import scala.collection.JavaConversions._
 
 import scala.util.{ Failure, Success }
 
-object BiojavaAdamScalaContext {
+object BiojavaAdamContext {
 
   /**
    * Create a new BiojavaAdamContext extending the specified ADAMContext.
    *
    * @param ac ADAMContext to extend.
    */
-  def apply(ac: ADAMContext): BiojavaAdamScalaContext = {
+  def apply(ac: ADAMContext): BiojavaAdamContext = {
     val injector = Guice.createInjector(new BiojavaModule(), new BdgenomicsModule())
     val readConverter = injector.instance[Converter[Fastq, Read]]
     val dnaSequenceConverter = injector.instance[Converter[DNASequence, Sequence]]
@@ -97,7 +97,7 @@ object BiojavaAdamScalaContext {
     val rnaSequenceConverter = injector.instance[Converter[RNASequence, Sequence]]
     val rnaSequenceFeatureConverter = injector.instance[Converter[RNASequence, java.util.List[Feature]]]
 
-    new BiojavaAdamScalaContext(
+    new BiojavaAdamContext(
       ac,
       readConverter,
       dnaSequenceConverter,
@@ -122,7 +122,7 @@ object BiojavaAdamScalaContext {
  * @param rnaSequenceConverter Convert Biojava RNASequence to bdg-formats Sequence
  * @param rnaSequenceFeaturesConverter Convert Biojava RNASequence to a list of bdg-formats Features
  */
-class BiojavaAdamScalaContext
+class BiojavaAdamContext
 (
   @transient val ac: ADAMContext,
   val readConverter: Converter[Fastq, Read],
@@ -135,6 +135,18 @@ class BiojavaAdamScalaContext
 ) extends Serializable with Logging {
 
   // FASTQ format
+
+  /**
+   * Load the specified path in FASTQ format as reads with Biojava.
+   * Alias for <code>loadBiojavaFastqReads</code>.
+   *
+   * @param path path in FASTQ format, must not be null
+   * @return RDD of reads
+   * @throws IOException if an I/O error occurs
+   */
+  def loadFastqReads(path: String): ReadRDD = {
+    loadBiojavaFastqReads(path)
+  }
 
   /**
    * Load the specified path in FASTQ format as reads with Biojava.
@@ -218,6 +230,18 @@ class BiojavaAdamScalaContext
 
   /**
    * Load the specified path in Genbank format as DNA sequences with Biojava.
+   * Alias for <code>loadBiojavaGenbankDna</code>.
+   *
+   * @param path path in Genbank format, must not be null
+   * @return RDD of DNA sequences
+   * @throws IOException if an I/O error occurs
+   */
+  def loadGenbankDna(path: String): SequenceRDD = {
+    loadBiojavaGenbankDna(path)
+  }
+
+  /**
+   * Load the specified path in Genbank format as DNA sequences with Biojava.
    *
    * @param path path in Genbank format, must not be null
    * @return RDD of DNA sequences
@@ -233,6 +257,18 @@ class BiojavaAdamScalaContext
       case Success(s) => s
       case Failure(e) => throw e
     }
+  }
+
+  /**
+   * Load the specified path in Genbank format as DNA sequence features with Biojava.
+   * Alias for <code>loadBiojavaGenbankDnaFeatures</code>.
+   * 
+   * @param path path in Genbank format, must not be null
+   * @return RDD of DNA sequence features
+   * @throws Exception if an I/O error occurs
+   */
+  def loadGenbankDnaFeatures(path: String): FeatureRDD = {
+    loadBiojavaGenbankDnaFeatures(path)
   }
 
   /**
@@ -256,6 +292,18 @@ class BiojavaAdamScalaContext
 
   /**
    * Load the specified path in Genbank format as protein sequences with Biojava.
+   * Alias for <code>loadBiojavaGenbankProtein</code>.
+   *
+   * @param path path in Genbank format, must not be null
+   * @return RDD of protein sequences
+   * @throws IOException if an I/O error occurs
+   */
+  def loadGenbankProtein(path: String): SequenceRDD = {
+    loadBiojavaGenbankProtein(path)
+  }
+
+  /**
+   * Load the specified path in Genbank format as protein sequences with Biojava.
    *
    * @param path path in Genbank format, must not be null
    * @return RDD of protein sequences
@@ -271,6 +319,18 @@ class BiojavaAdamScalaContext
       case Success(s) => s
       case Failure(e) => throw e
     }
+  }
+
+  /**
+   * Load the specified path in Genbank format as protein sequence features with Biojava.
+   * Alias for <code>loadBiojavaGenbankProteinFeatures</code>.
+   * 
+   * @param path path in Genbank format, must not be null
+   * @return RDD of protein sequence features
+   * @throws Exception if an I/O error occurs
+   */
+  def loadGenbankProteinFeatures(path: String): FeatureRDD = {
+    loadBiojavaGenbankProteinFeatures(path)
   }
 
   /**
@@ -294,6 +354,18 @@ class BiojavaAdamScalaContext
 
   /**
    * Load the specified path in Genbank format as RNA sequences with Biojava.
+   * Alias for <code>loadBiojavaGenbankRna</code>.
+   *
+   * @param path path in Genbank format, must not be null
+   * @return RDD of RNA sequences
+   * @throws IOException if an I/O error occurs
+   */
+  def loadGenbankRna(path: String): SequenceRDD = {
+    loadBiojavaGenbankRna(path)
+  }
+
+  /**
+   * Load the specified path in Genbank format as RNA sequences with Biojava.
    *
    * @param path path in Genbank format, must not be null
    * @return RDD of RNA sequences
@@ -309,6 +381,18 @@ class BiojavaAdamScalaContext
       case Success(s) => s
       case Failure(e) => throw e
     }
+  }
+
+  /**
+   * Load the specified path in Genbank format as RNA sequence features with Biojava.
+   * Alias for <code>loadBiojavaGenbankRnaFeatures</code>.
+   * 
+   * @param path path in Genbank format, must not be null
+   * @return RDD of RNA sequence features
+   * @throws Exception if an I/O error occurs
+   */
+  def loadGenbankRnaFeatures(path: String): FeatureRDD = {
+    loadBiojavaGenbankRnaFeatures(path)
   }
 
   /**
