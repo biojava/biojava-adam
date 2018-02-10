@@ -46,10 +46,10 @@ reads: org.bdgenomics.adam.rdd.read.ReadRDD = RDDBoundReadRDD with 0 reference s
 
 scala> reads.rdd.first
 res0: org.bdgenomics.formats.avro.Read = {"name": "SRR062634.10022079/1", "description":
-"SRR062634.10022079/1", "alphabet": "DNA", "sequence": "AATTCAAAACCAGCCTGGCCAATATGGTGAAACCTCATCTCTACTAAAAA
-TACAAAAATTAGCCAGGCATGGTGGTGCGTGCGTGTAGTCCCAGCTACTT", "length": 100, "qualityScores": "?-DDBEEB=EEEDDEDEEEA
-:D?5?E?CEBE5ED?D:AEDEDEDED-B,BC0AC,BB6@CDBDEC?BCBAA@5,=8CA-?A>?2:&048<BB5BE#####", "qualityScoreVariant":
-"FASTQ_SANGER", "attributes": {}}
+"SRR062634.10022079/1", "alphabet": "DNA", "sequence": "AATTCAAAACCAGCCTGGCCAATATGGTGAAACCTCATCTCTACTAAAA
+ATACAAAAATTAGCCAGGCATGGTGGTGCGTGCGTGTAGTCCCAGCTACTT", "length": 100, "qualityScores": "?-DDBEEB=EEEDDEDEE
+EA:D?5?E?CEBE5ED?D:AEDEDEDED-B,BC0AC,BB6@CDBDEC?BCBAA@5,=8CA-?A>?2:&048<BB5BE#####",
+"qualityScoreVariant": "FASTQ_SANGER", "attributes": {}}
 
 scala> val dna = bc.loadBiojavaFastaDna("src/test/resources/org/biojava/nbio/adam/hla_gen.0.fa")
 dna: org.bdgenomics.adam.rdd.sequence.SequenceRDD = RDDBoundSequenceRDD with 0 reference sequences
