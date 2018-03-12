@@ -50,8 +50,8 @@ import org.biojava.nbio.core.sequence.DNASequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.RNASequence;
 
-import org.biojava.nbio.sequencing.io.fastq.Fastq;
-import org.biojava.nbio.sequencing.io.fastq.FastqVariant;
+import org.biojava.nbio.genome.io.fastq.Fastq;
+import org.biojava.nbio.genome.io.fastq.FastqVariant;
 
 /**
  * Unit test for BiojavaModule.

@@ -70,9 +70,9 @@ import org.biojava.nbio.core.sequence.io.GenericFastaHeaderParser
 import org.biojava.nbio.core.sequence.io.GenericGenbankHeaderParser
 import org.biojava.nbio.core.sequence.io.RNASequenceCreator
 
-import org.biojava.nbio.sequencing.io.fastq.Fastq
-import org.biojava.nbio.sequencing.io.fastq.FastqReader
-import org.biojava.nbio.sequencing.io.fastq.SangerFastqReader
+import org.biojava.nbio.genome.io.fastq.Fastq
+import org.biojava.nbio.genome.io.fastq.FastqReader
+import org.biojava.nbio.genome.io.fastq.SangerFastqReader
 
 import org.biojava.nbio.adam.convert.BiojavaModule
 

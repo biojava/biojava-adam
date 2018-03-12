@@ -33,9 +33,9 @@ import org.bdgenomics.convert.ConversionStringency;
 import org.bdgenomics.formats.avro.QualityScoreVariant;
 import org.bdgenomics.formats.avro.Read;
 
-import org.biojava.nbio.sequencing.io.fastq.Fastq;
-import org.biojava.nbio.sequencing.io.fastq.FastqBuilder;
-import org.biojava.nbio.sequencing.io.fastq.FastqVariant;
+import org.biojava.nbio.genome.io.fastq.Fastq;
+import org.biojava.nbio.genome.io.fastq.FastqBuilder;
+import org.biojava.nbio.genome.io.fastq.FastqVariant;
 
 import org.slf4j.Logger;
 

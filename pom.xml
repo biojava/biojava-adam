@@ -350,7 +350,7 @@
       </dependency>
       <dependency>
         <groupId>org.biojava</groupId>
-        <artifactId>biojava-sequencing</artifactId>
+        <artifactId>biojava-genome</artifactId>
         <exclusions>
           <exclusion>
             <groupId>org.apache.logging.log4j</groupId>
@@ -409,7 +409,7 @@
     </dependency>
     <dependency>
       <groupId>org.biojava</groupId>
-      <artifactId>biojava-sequencing</artifactId>
+      <artifactId>biojava-genome</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
