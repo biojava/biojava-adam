@@ -81,7 +81,7 @@ final class ProteinSequenceToFeatures extends AbstractConverter<ProteinSequence,
         }
 
         final Feature.Builder fb = Feature.newBuilder()
-            .setContigName(proteinSequence.getAccession().toString());
+            .setReferenceName(proteinSequence.getAccession().toString());
 
         int size = proteinSequence.getFeatures().size();
         List<Feature> features = new ArrayList<Feature>(size);

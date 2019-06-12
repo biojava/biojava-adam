@@ -31,7 +31,6 @@ import org.bdgenomics.convert.ConversionException;
 import org.bdgenomics.convert.ConversionStringency;
 
 import org.bdgenomics.formats.avro.Alphabet;
-import org.bdgenomics.formats.avro.QualityScoreVariant;
 import org.bdgenomics.formats.avro.Read;
 
 import org.biojava.nbio.genome.io.fastq.Fastq;
@@ -47,19 +46,11 @@ import org.slf4j.Logger;
 @Immutable
 final class FastqToRead extends AbstractConverter<Fastq, Read> {
 
-    /** Convert Biojava FastqVariant to bdg-formats QualityScoreVariant. */
-    final Converter<FastqVariant, QualityScoreVariant> fastqVariantConverter;
-
-
     /**
      * Package private no-arg constructor.
-     *
-     * @param fastqVariantConverter convert Biojava FastqVariant to bdg-formats QualityScoreVariant, must not be null
      */
-    FastqToRead(final Converter<FastqVariant, QualityScoreVariant> fastqVariantConverter) {
+    FastqToRead() {
         super(Fastq.class, Read.class);
-        checkNotNull(fastqVariantConverter);
-        this.fastqVariantConverter = fastqVariantConverter;
     }
 
 
@@ -79,7 +70,6 @@ final class FastqToRead extends AbstractConverter<Fastq, Read> {
             .setSequence(fastq.getSequence().toUpperCase())
             .setLength(Long.valueOf(fastq.getSequence().length()))
             .setQualityScores(fastq.getQuality())
-            .setQualityScoreVariant(fastqVariantConverter.convert(fastq.getVariant(), stringency, logger))
             .build();
     }
 

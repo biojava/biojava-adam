@@ -33,11 +33,11 @@ import org.apache.hadoop.fs.Path
 
 import org.bdgenomics.adam.rdd.ADAMContext
 
-import org.bdgenomics.adam.rdd.feature.FeatureRDD
+import org.bdgenomics.adam.rdd.feature.FeatureDataset
 
-import org.bdgenomics.adam.rdd.read.ReadRDD
+import org.bdgenomics.adam.rdd.read.ReadDataset
 
-import org.bdgenomics.adam.rdd.sequence.SequenceRDD
+import org.bdgenomics.adam.rdd.sequence.SequenceDataset
 
 import org.bdgenomics.convert.Converter
 import org.bdgenomics.convert.ConversionException
@@ -144,7 +144,7 @@ class BiojavaAdamContext
    * @return RDD of reads
    * @throws IOException if an I/O error occurs
    */
-  def loadFastqReads(path: String): ReadRDD = {
+  def loadFastqReads(path: String): ReadDataset = {
     loadBiojavaFastqReads(path)
   }
 
@@ -155,12 +155,12 @@ class BiojavaAdamContext
    * @return RDD of reads
    * @throws IOException if an I/O error occurs
    */
-  def loadBiojavaFastqReads(path: String): ReadRDD = {
+  def loadBiojavaFastqReads(path: String): ReadDataset = {
     log.info(s"Loading $path in FASTQ format as reads with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val fastqs = ac.sc.parallelize(readFastq(inputStream))
       val reads = fastqs.map(readConverter.convert(_, ConversionStringency.STRICT, log))
-      ReadRDD(reads)
+      ReadDataset(reads)
     }) match {
       case Success(r) => r
       case Failure(e) => throw e
@@ -176,12 +176,12 @@ class BiojavaAdamContext
    * @return RDD of DNA sequences
    * @throws IOException if an I/O error occurs
    */
-  def loadBiojavaFastaDna(path: String): SequenceRDD = {
+  def loadBiojavaFastaDna(path: String): SequenceDataset = {
     log.info(s"Loading $path in FASTA format as DNA sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val dnaSequences = ac.sc.parallelize(readFastaDna(inputStream))
       val sequences = dnaSequences.map(dnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
-      SequenceRDD(sequences)
+      SequenceDataset(sequences)
     }) match {
       case Success(s) => s
       case Failure(e) => throw e
@@ -195,12 +195,12 @@ class BiojavaAdamContext
    * @return RDD of protein sequences
    * @throws IOException if an I/O error occurs
    */
-  def loadBiojavaFastaProtein(path: String): SequenceRDD = {
+  def loadBiojavaFastaProtein(path: String): SequenceDataset = {
     log.info(s"Loading $path in FASTA format as protein sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val proteinSequences = ac.sc.parallelize(readFastaProtein(inputStream))
       val sequences = proteinSequences.map(proteinSequenceConverter.convert(_, ConversionStringency.STRICT, log))
-      SequenceRDD(sequences)
+      SequenceDataset(sequences)
     }) match {
       case Success(s) => s
       case Failure(e) => throw e
@@ -214,12 +214,12 @@ class BiojavaAdamContext
    * @return RDD of RNA sequences
    * @throws IOException if an I/O error occurs
    */
-  def loadBiojavaFastaRna(path: String): SequenceRDD = {
+  def loadBiojavaFastaRna(path: String): SequenceDataset = {
     log.info(s"Loading $path in FASTA format as RNA sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val rnaSequences = ac.sc.parallelize(readFastaRna(inputStream))
       val sequences = rnaSequences.map(rnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
-      SequenceRDD(sequences)
+      SequenceDataset(sequences)
     }) match {
       case Success(s) => s
       case Failure(e) => throw e
@@ -236,7 +236,7 @@ class BiojavaAdamContext
    * @return RDD of DNA sequences
    * @throws IOException if an I/O error occurs
    */
-  def loadGenbankDna(path: String): SequenceRDD = {
+  def loadGenbankDna(path: String): SequenceDataset = {
     loadBiojavaGenbankDna(path)
   }
 
@@ -247,12 +247,12 @@ class BiojavaAdamContext
    * @return RDD of DNA sequences
    * @throws IOException if an I/O error occurs
    */
-  def loadBiojavaGenbankDna(path: String): SequenceRDD = {
+  def loadBiojavaGenbankDna(path: String): SequenceDataset = {
     log.info(s"Loading $path in Genbank format as DNA sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val dnaSequences = ac.sc.parallelize(readGenbankDna(inputStream))
       val sequences = dnaSequences.map(dnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
-      SequenceRDD(sequences)
+      SequenceDataset(sequences)
     }) match {
       case Success(s) => s
       case Failure(e) => throw e
@@ -267,7 +267,7 @@ class BiojavaAdamContext
    * @return RDD of DNA sequence features
    * @throws Exception if an I/O error occurs
    */
-  def loadGenbankDnaFeatures(path: String): FeatureRDD = {
+  def loadGenbankDnaFeatures(path: String): FeatureDataset = {
     loadBiojavaGenbankDnaFeatures(path)
   }
 
@@ -278,12 +278,12 @@ class BiojavaAdamContext
    * @return RDD of DNA sequence features
    * @throws Exception if an I/O error occurs
    */
-  def loadBiojavaGenbankDnaFeatures(path: String): FeatureRDD = {
+  def loadBiojavaGenbankDnaFeatures(path: String): FeatureDataset = {
     log.info(s"Loading $path in Genbank format as DNA sequence features with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val dnaSequences = ac.sc.parallelize(readGenbankDna(inputStream))
       val features = dnaSequences.flatMap(dnaSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, log))
-      FeatureRDD(features)
+      FeatureDataset(features)
     }) match {
       case Success(f) => f
       case Failure(e) => throw e
@@ -298,7 +298,7 @@ class BiojavaAdamContext
    * @return RDD of protein sequences
    * @throws IOException if an I/O error occurs
    */
-  def loadGenbankProtein(path: String): SequenceRDD = {
+  def loadGenbankProtein(path: String): SequenceDataset = {
     loadBiojavaGenbankProtein(path)
   }
 
@@ -309,12 +309,12 @@ class BiojavaAdamContext
    * @return RDD of protein sequences
    * @throws IOException if an I/O error occurs
    */
-  def loadBiojavaGenbankProtein(path: String): SequenceRDD = {
+  def loadBiojavaGenbankProtein(path: String): SequenceDataset = {
     log.info(s"Loading $path in Genbank format as protein sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val proteinSequences = ac.sc.parallelize(readGenbankProtein(inputStream))
       val sequences = proteinSequences.map(proteinSequenceConverter.convert(_, ConversionStringency.STRICT, log))
-      SequenceRDD(sequences)
+      SequenceDataset(sequences)
     }) match {
       case Success(s) => s
       case Failure(e) => throw e
@@ -329,7 +329,7 @@ class BiojavaAdamContext
    * @return RDD of protein sequence features
    * @throws Exception if an I/O error occurs
    */
-  def loadGenbankProteinFeatures(path: String): FeatureRDD = {
+  def loadGenbankProteinFeatures(path: String): FeatureDataset = {
     loadBiojavaGenbankProteinFeatures(path)
   }
 
@@ -340,12 +340,12 @@ class BiojavaAdamContext
    * @return RDD of protein sequence features
    * @throws Exception if an I/O error occurs
    */
-  def loadBiojavaGenbankProteinFeatures(path: String): FeatureRDD = {
+  def loadBiojavaGenbankProteinFeatures(path: String): FeatureDataset = {
     log.info(s"Loading $path in Genbank format as protein sequence features with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val proteinSequences = ac.sc.parallelize(readGenbankProtein(inputStream))
       val features = proteinSequences.flatMap(proteinSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, log))
-      FeatureRDD(features)
+      FeatureDataset(features)
     }) match {
       case Success(f) => f
       case Failure(e) => throw e
@@ -360,7 +360,7 @@ class BiojavaAdamContext
    * @return RDD of RNA sequences
    * @throws IOException if an I/O error occurs
    */
-  def loadGenbankRna(path: String): SequenceRDD = {
+  def loadGenbankRna(path: String): SequenceDataset = {
     loadBiojavaGenbankRna(path)
   }
 
@@ -371,12 +371,12 @@ class BiojavaAdamContext
    * @return RDD of RNA sequences
    * @throws IOException if an I/O error occurs
    */
-  def loadBiojavaGenbankRna(path: String): SequenceRDD = {
+  def loadBiojavaGenbankRna(path: String): SequenceDataset = {
     log.info(s"Loading $path in Genbank format as RNA sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val rnaSequences = ac.sc.parallelize(readGenbankRna(inputStream))
       val sequences = rnaSequences.map(rnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
-      SequenceRDD(sequences)
+      SequenceDataset(sequences)
     }) match {
       case Success(s) => s
       case Failure(e) => throw e
@@ -391,7 +391,7 @@ class BiojavaAdamContext
    * @return RDD of RNA sequence features
    * @throws Exception if an I/O error occurs
    */
-  def loadGenbankRnaFeatures(path: String): FeatureRDD = {
+  def loadGenbankRnaFeatures(path: String): FeatureDataset = {
     loadBiojavaGenbankRnaFeatures(path)
   }
 
@@ -402,12 +402,12 @@ class BiojavaAdamContext
    * @return RDD of RNA sequence features
    * @throws Exception if an I/O error occurs
    */
-  def loadBiojavaGenbankRnaFeatures(path: String): FeatureRDD = {
+  def loadBiojavaGenbankRnaFeatures(path: String): FeatureDataset = {
     log.info(s"Loading $path in Genbank format as RNA sequence features with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val rnaSequences = ac.sc.parallelize(readGenbankRna(inputStream))
       val features = rnaSequences.flatMap(rnaSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, log))
-      FeatureRDD(features)
+      FeatureDataset(features)
     }) match {
       case Success(f) => f
       case Failure(e) => throw e

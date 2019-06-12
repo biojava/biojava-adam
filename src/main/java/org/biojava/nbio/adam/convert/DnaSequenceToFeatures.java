@@ -81,7 +81,7 @@ final class DnaSequenceToFeatures extends AbstractConverter<DNASequence, List<Fe
         }
 
         final Feature.Builder fb = Feature.newBuilder()
-            .setContigName(dnaSequence.getAccession().toString());
+            .setReferenceName(dnaSequence.getAccession().toString());
 
         int size = dnaSequence.getFeatures().size();
         List<Feature> features = new ArrayList<Feature>(size);

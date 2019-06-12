@@ -81,7 +81,7 @@ final class RnaSequenceToFeatures extends AbstractConverter<RNASequence, List<Fe
         }
 
         final Feature.Builder fb = Feature.newBuilder()
-            .setContigName(rnaSequence.getAccession().toString());
+            .setReferenceName(rnaSequence.getAccession().toString());
 
         int size = rnaSequence.getFeatures().size();
         List<Feature> features = new ArrayList<Feature>(size);

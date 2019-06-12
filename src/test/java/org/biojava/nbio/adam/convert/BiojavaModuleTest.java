@@ -41,7 +41,6 @@ import org.bdgenomics.convert.ConversionStringency;
 import org.bdgenomics.convert.bdgenomics.BdgenomicsModule;
 
 import org.bdgenomics.formats.avro.Feature;
-import org.bdgenomics.formats.avro.QualityScoreVariant;
 import org.bdgenomics.formats.avro.Read;
 import org.bdgenomics.formats.avro.Sequence;
 import org.bdgenomics.formats.avro.Strand;
@@ -75,8 +74,6 @@ public final class BiojavaModuleTest {
     public void testBiojavaModule() {
         Injector injector = Guice.createInjector(module, new BdgenomicsModule(), new TestModule());
         Target target = injector.getInstance(Target.class);
-        assertNotNull(target.getQualityScoreVariantToFastqVariant());
-        assertNotNull(target.getFastqVariantToQualityScoreVariant());
         assertNotNull(target.getBiojavaStrandToBdgenomicsStrand());
         assertNotNull(target.getFastqToRead());
         assertNotNull(target.getReadToFastq());
@@ -92,8 +89,6 @@ public final class BiojavaModuleTest {
      * Injection target.
      */
     static class Target {
-        Converter<QualityScoreVariant, FastqVariant> qualityScoreVariantToFastqVariant;
-        Converter<FastqVariant, QualityScoreVariant> fastqVariantToQualityScoreVariant;
         Converter<org.biojava.nbio.core.sequence.Strand, Strand> biojavaStrandToBdgenomicsStrand;
         Converter<Fastq, Read> fastqToRead;
         Converter<Read, Fastq> readToFastq;
@@ -105,9 +100,7 @@ public final class BiojavaModuleTest {
         Converter<RNASequence, Sequence> rnaSequenceToSequence;
 
         @Inject
-        Target(final Converter<QualityScoreVariant, FastqVariant> qualityScoreVariantToFastqVariant,
-               final Converter<FastqVariant, QualityScoreVariant> fastqVariantToQualityScoreVariant,
-               final Converter<org.biojava.nbio.core.sequence.Strand, Strand> biojavaStrandToBdgenomicsStrand,
+        Target(final Converter<org.biojava.nbio.core.sequence.Strand, Strand> biojavaStrandToBdgenomicsStrand,
                final Converter<Fastq, Read> fastqToRead,
                final Converter<Read, Fastq> readToFastq,
                final Converter<DNASequence, List<Feature>> dnaSequenceToFeatures,
@@ -117,8 +110,6 @@ public final class BiojavaModuleTest {
                final Converter<RNASequence, List<Feature>> rnaSequenceToFeatures,
                final Converter<RNASequence, Sequence> rnaSequenceToSequence) {
 
-            this.qualityScoreVariantToFastqVariant = qualityScoreVariantToFastqVariant;
-            this.fastqVariantToQualityScoreVariant = fastqVariantToQualityScoreVariant;
             this.biojavaStrandToBdgenomicsStrand = biojavaStrandToBdgenomicsStrand;
             this.fastqToRead = fastqToRead;
             this.readToFastq = readToFastq;
@@ -128,14 +119,6 @@ public final class BiojavaModuleTest {
             this.proteinSequenceToSequence = proteinSequenceToSequence;
             this.rnaSequenceToFeatures = rnaSequenceToFeatures;
             this.rnaSequenceToSequence = rnaSequenceToSequence;
-        }
-
-        Converter<QualityScoreVariant, FastqVariant> getQualityScoreVariantToFastqVariant() {
-            return qualityScoreVariantToFastqVariant;
-        }
-
-        Converter<FastqVariant, QualityScoreVariant> getFastqVariantToQualityScoreVariant() {
-            return fastqVariantToQualityScoreVariant;
         }
 
         Converter<org.biojava.nbio.core.sequence.Strand, Strand> getBiojavaStrandToBdgenomicsStrand() {

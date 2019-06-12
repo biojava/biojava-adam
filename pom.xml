@@ -33,7 +33,7 @@
   <artifactId>biojava-adam</artifactId>
   <packaging>jar</packaging>
   <name>biojava-adam</name>
-  <version>5.0.0-SNAPSHOT</version>
+  <version>5.2.2-SNAPSHOT</version>
   <description>Biojava and ADAM integration.</description>
   <url>http://www.biojava.org</url>
   <inceptionYear>2017</inceptionYear>
@@ -59,19 +59,19 @@
     </license>
   </licenses>
   <properties>
-    <adam.version>0.24.0-SNAPSHOT</adam.version>
-    <bdg-convert.version>0.2.0</bdg-convert.version>
+    <adam.version>0.28.0-SNAPSHOT</adam.version>
+    <bdg-convert.version>0.7.0-SNAPSHOT</bdg-convert.version>
     <biojava.version>${project.version}</biojava.version>
     <jdk.version>1.8</jdk.version>
     <junit.version>4.12</junit.version>
     <maven.enforcer.jdk-version>[1.8,)</maven.enforcer.jdk-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-    <scala-guice.version>4.1.0</scala-guice.version>
+    <scala-guice.version>4.2.1</scala-guice.version>
     <scala.version>2.11.12</scala.version>
     <scala.version.prefix>2.11</scala.version.prefix>
     <slf4j.version>1.7.25</slf4j.version>
-    <spark.version>2.2.1</spark.version>
+    <spark.version>2.4.3</spark.version>
   </properties>
   <build>
     <pluginManagement>

@@ -34,7 +34,6 @@ import com.google.inject.Singleton;
 import org.bdgenomics.convert.Converter;
 import org.bdgenomics.convert.ConversionStringency;
 
-import org.bdgenomics.formats.avro.QualityScoreVariant;
 import org.bdgenomics.formats.avro.Dbxref;
 import org.bdgenomics.formats.avro.Feature;
 import org.bdgenomics.formats.avro.OntologyTerm;
@@ -47,7 +46,6 @@ import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.RNASequence;
 
 import org.biojava.nbio.genome.io.fastq.Fastq;
-import org.biojava.nbio.genome.io.fastq.FastqVariant;
 
 /**
  * Guice module for the org.biojava.nbio.adam.convert package.
@@ -62,28 +60,18 @@ public final class BiojavaModule extends AbstractModule {
     }
 
     @Provides @Singleton
-    Converter<QualityScoreVariant, FastqVariant> createQualityScoreVariantToFastqVariant() {
-        return new QualityScoreVariantToFastqVariant();
-    }
-
-    @Provides @Singleton
-    Converter<FastqVariant, QualityScoreVariant> createFastqVariantToQualityScoreVariant() {
-        return new FastqVariantToQualityScoreVariant();
-    }
-
-    @Provides @Singleton
     Converter<org.biojava.nbio.core.sequence.Strand, Strand> createBiojavaStrandToBdgenomicsStrand() {
         return new BiojavaStrandToBdgenomicsStrand();
     }
 
     @Provides @Singleton
-    Converter<Fastq, Read> createFastqToRead(final Converter<FastqVariant, QualityScoreVariant> fastqVariantConverter) {
-        return new FastqToRead(fastqVariantConverter);
+    Converter<Fastq, Read> createFastqToRead() {
+        return new FastqToRead();
     }
 
     @Provides @Singleton
-    Converter<Read, Fastq> createReadToFastq(final Converter<QualityScoreVariant, FastqVariant> fastqVariantConverter) {
-        return new ReadToFastq(fastqVariantConverter);
+    Converter<Read, Fastq> createReadToFastq() {
+        return new ReadToFastq();
     }
 
     @Provides @Singleton
