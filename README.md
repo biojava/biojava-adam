@@ -16,6 +16,8 @@ To build
     $ mvn install
 
 
+### Running biojava-adam
+
 To run interactively in `spark-shell`
 
 ```
@@ -94,6 +96,8 @@ null, "frame": null, "score": null, "geneId": null, "transcriptId": null, "exonI
 "ontologyTerms": [], "circular": null, "attributes": {}}
 ```
 
+
+### Example biojava-adam scripts
 
 Some scripts for `spark-shell` written in Scala are provided in the `scripts` directory. E.g. to transform
 DNA sequences in Genbank format to `Sequence`s in Parquet format:
