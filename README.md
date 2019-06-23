@@ -16,7 +16,7 @@ To build
     $ mvn install
 
 
-To run
+To run interactively in `spark-shell`
 
 ```
 $ spark-shell \
@@ -93,3 +93,20 @@ null, "frame": null, "score": null, "geneId": null, "transcriptId": null, "exonI
 [], "parentIds": [], "target": null, "gap": null, "derivesFrom": null, "notes": [], "dbxrefs": [],
 "ontologyTerms": [], "circular": null, "attributes": {}}
 ```
+
+
+Some scripts for `spark-shell` written in Scala are provided in the `scripts` directory. E.g. to transform
+DNA sequences in Genbank format to `Sequence`s in Parquet format:
+
+```
+$ INPUT=Homo_sapiens.GRCh38.96.chromosome.21.dat.gz \
+  OUTPUT=Homo_sapiens.GRCh38.96.chromosome.21.sequences.adam \
+  spark-shell \
+    --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
+    --conf spark.kryo.registrator=org.biojava.nbio.adam.BiojavaKryoRegistrator \
+    --jars target/biojava-adam-5.2.2-SNAPSHOT.jar,$PATH_TO_ADAM_ASSEMBLY_JAR
+    -i scripts/loadGenbankDna.scala
+```
+
+All the scripts follow a similar pattern, with input path specified by `INPUT` environment variable and output
+path specified by `OUTPUT` environment variable.
