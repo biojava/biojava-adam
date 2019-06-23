@@ -31,6 +31,8 @@ import net.codingwell.scalaguice.InjectorExtensions._
 
 import org.apache.hadoop.fs.Path
 
+import org.apache.hadoop.io.compress.CompressionCodecFactory
+
 import org.bdgenomics.adam.rdd.ADAMContext
 
 import org.bdgenomics.adam.rdd.feature.FeatureDataset
@@ -424,7 +426,14 @@ class BiojavaAdamContext
   private def openInputStream(fileName: String): InputStream = {
     val path = new Path(fileName)
     val fileSystem = path.getFileSystem(ac.sc.hadoopConfiguration)
-    fileSystem.open(path)
+    val codecFactory = new CompressionCodecFactory(ac.sc.hadoopConfiguration)
+    val codec = codecFactory.getCodec(path)
+
+    if (codec == null) {
+      fileSystem.open(path)
+    } else {
+      codec.createInputStream(fileSystem.open(path))
+    }
   }
 
   private def readFastq(inputStream: InputStream): Seq[Fastq] = {
