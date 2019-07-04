@@ -59,7 +59,7 @@
     </license>
   </licenses>
   <properties>
-    <adam.version>0.28.0-SNAPSHOT</adam.version>
+    <adam.version>0.28.0</adam.version>
     <bdg-convert.version>0.7.0-SNAPSHOT</bdg-convert.version>
     <biojava.version>${project.version}</biojava.version>
     <jdk.version>1.8</jdk.version>
