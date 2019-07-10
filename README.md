@@ -1,6 +1,11 @@
 # biojava-adam
 
-[Biojava](http://biojava.org) and ADAM integration.
+[Biojava](http://biojava.org) and [ADAM](https://github.com/bigdatagenomics/adam) integration.
+
+[![Build Status](https://travis-ci.org/biojava/biojava-adam.svg?branch=master)](https://travis-ci.org/biojava/biojava-adam)
+[![Maven Central](https://img.shields.io/maven-central/v/org.biojava/biojava-adam.svg?maxAge=600)](http://search.maven.org/#search%7Cga%7C1%7Corg.biojava)
+[![API Documentation](http://javadoc.io/badge/org.biojava/biojava-adam.svg?color=brightgreen&label=scaladoc)](http://javadoc.io/doc/org.biojava/biojava-adam)
+
 
 ### Hacking biojava-adam
 
@@ -24,7 +29,7 @@ To run interactively in `spark-shell`
 $ spark-shell \
     --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
     --conf spark.kryo.registrator=org.biojava.nbio.adam.BiojavaKryoRegistrator \
-    --jars target/biojava-adam-5.2.2-SNAPSHOT.jar,$PATH_TO_ADAM_ASSEMBLY_JAR
+    --jars target/biojava-adam-0.2.0-SNAPSHOT.jar,$PATH_TO_ADAM_ASSEMBLY_JAR
 
 Welcome to
       ____              __
@@ -108,7 +113,7 @@ $ INPUT=Homo_sapiens.GRCh38.96.chromosome.21.dat.gz \
   spark-shell \
     --conf spark.serializer=org.apache.spark.serializer.KryoSerializer \
     --conf spark.kryo.registrator=org.biojava.nbio.adam.BiojavaKryoRegistrator \
-    --jars target/biojava-adam-5.2.2-SNAPSHOT.jar,$PATH_TO_ADAM_ASSEMBLY_JAR
+    --jars target/biojava-adam-0.2.0-SNAPSHOT.jar,$PATH_TO_ADAM_ASSEMBLY_JAR
     -i scripts/loadGenbankDna.scala
 ```
 
