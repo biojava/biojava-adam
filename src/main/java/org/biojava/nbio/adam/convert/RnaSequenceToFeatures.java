@@ -24,7 +24,10 @@
 package org.biojava.nbio.adam.convert;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -39,6 +42,7 @@ import org.bdgenomics.formats.avro.Strand;
 import org.biojava.nbio.core.sequence.RNASequence;
 
 import org.biojava.nbio.core.sequence.features.FeatureInterface;
+import org.biojava.nbio.core.sequence.features.Qualifier;
 
 import org.biojava.nbio.core.sequence.location.template.AbstractLocation;
 import org.biojava.nbio.core.sequence.location.template.Point;
@@ -135,7 +139,24 @@ final class RnaSequenceToFeatures extends AbstractConverter<RNASequence, List<Fe
                 fb.clearName();
             }
 
-            // todo: dbxref, ontology term, attributes
+            Map<String, String> attributes = new HashMap<String, String>();
+            Map<String, List<Qualifier>> qualifiers = feature.getQualifiers();
+            for (Map.Entry<String, List<Qualifier>> entry : qualifiers.entrySet()) {
+                String key = entry.getKey();
+                List<Qualifier> value = entry.getValue();
+                StringBuilder sb = new StringBuilder();
+                for (Iterator<Qualifier> i = value.iterator(); i.hasNext(); ) {
+                    sb.append(i.next().getValue());
+                    if (i.hasNext()) {
+                        sb.append(",");
+                    }
+                }
+                attributes.put(key, sb.toString());
+            }
+            if (!attributes.isEmpty()) {
+                fb.setAttributes(attributes);
+            }
+
             features.add(fb.build());
         }
 
