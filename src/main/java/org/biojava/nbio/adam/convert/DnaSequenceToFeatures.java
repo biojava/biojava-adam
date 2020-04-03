@@ -23,6 +23,8 @@
 */
 package org.biojava.nbio.adam.convert;
 
+import static org.biojava.nbio.adam.convert.ConvertUtils.trimNewlines;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -130,10 +132,10 @@ final class DnaSequenceToFeatures extends AbstractConverter<DNASequence, List<Fe
             }
 
             if (feature.getShortDescription() != null) {
-                fb.setName(feature.getShortDescription());
+                fb.setName(trimNewlines(feature.getShortDescription()));
             }
             else if (feature.getDescription() != null) {
-                fb.setName(feature.getDescription());
+                fb.setName(trimNewlines(feature.getDescription()));
             }
             else {
                 fb.clearName();
@@ -146,7 +148,7 @@ final class DnaSequenceToFeatures extends AbstractConverter<DNASequence, List<Fe
                 List<Qualifier> value = entry.getValue();
                 StringBuilder sb = new StringBuilder();
                 for (Iterator<Qualifier> i = value.iterator(); i.hasNext(); ) {
-                    sb.append(i.next().getValue());
+                    sb.append(trimNewlines(i.next().getValue()));
                     if (i.hasNext()) {
                         sb.append(",");
                     }

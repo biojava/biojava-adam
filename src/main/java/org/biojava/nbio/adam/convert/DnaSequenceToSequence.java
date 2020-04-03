@@ -23,6 +23,8 @@
 */
 package org.biojava.nbio.adam.convert;
 
+import static org.biojava.nbio.adam.convert.ConvertUtils.trimNewlines;
+
 import javax.annotation.concurrent.Immutable;
 
 import org.bdgenomics.convert.AbstractConverter;
@@ -64,7 +66,7 @@ final class DnaSequenceToSequence extends AbstractConverter<DNASequence, Sequenc
 
         Sequence.Builder sb = Sequence.newBuilder()
             .setName(dnaSequence.getAccession().toString())
-            .setDescription(dnaSequence.getDescription())
+            .setDescription(trimNewlines(dnaSequence.getDescription()))
             .setAlphabet(Alphabet.DNA)
             .setSequence(dnaSequence.getSequenceAsString().toUpperCase())
             .setLength((long) dnaSequence.getLength());
