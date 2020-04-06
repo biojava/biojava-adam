@@ -38,6 +38,7 @@ import org.bdgenomics.convert.AbstractConverter;
 import org.bdgenomics.convert.ConversionException;
 import org.bdgenomics.convert.ConversionStringency;
 
+import org.bdgenomics.formats.avro.Dbxref;
 import org.bdgenomics.formats.avro.Feature;
 import org.bdgenomics.formats.avro.Strand;
 
@@ -141,19 +142,46 @@ final class RnaSequenceToFeatures extends AbstractConverter<RNASequence, List<Fe
                 fb.clearName();
             }
 
+            // /db_xref=  --> feature.dbxrefs
+            List<String> notes = new ArrayList<String>();
+            // /note=  --> feature.notes
+            List<Dbxref> dbxrefs = new ArrayList<Dbxref>();
+            // remaining qualifiers
             Map<String, String> attributes = new HashMap<String, String>();
             Map<String, List<Qualifier>> qualifiers = feature.getQualifiers();
+
             for (Map.Entry<String, List<Qualifier>> entry : qualifiers.entrySet()) {
                 String key = entry.getKey();
                 List<Qualifier> value = entry.getValue();
                 StringBuilder sb = new StringBuilder();
                 for (Iterator<Qualifier> i = value.iterator(); i.hasNext(); ) {
-                    sb.append(trimNewlines(i.next().getValue()));
-                    if (i.hasNext()) {
-                        sb.append(",");
+                    String stringValue = trimNewlines(i.next().getValue());
+
+                    if ("db_xref".equals(key)) {
+                        String[] tokens = stringValue.split(":");
+                        if (tokens.length == 2) {
+                            dbxrefs.add(new Dbxref(tokens[0], tokens[1]));
+                        }
+                    }
+                    else if ("note".equals(key)) {
+                        notes.add(stringValue);
+                    }
+                    else {
+                        sb.append(stringValue);
+                        if (i.hasNext()) {
+                            sb.append(",");
+                        }
                     }
                 }
-                attributes.put(key, sb.toString());
+                if ("db_xref".equals(key)) {
+                    fb.setDbxrefs(dbxrefs);
+                }
+                else if ("note".equals(key)) {
+                    fb.setNotes(notes);
+                }
+                else {
+                    attributes.put(key, sb.toString());
+                }
             }
             if (!attributes.isEmpty()) {
                 fb.setAttributes(attributes);
