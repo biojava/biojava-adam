@@ -1,7 +1,7 @@
 /*
 
     biojava-adam  Biojava and ADAM integration.
-    Copyright (c) 2017-2019 held jointly by the individual authors.
+    Copyright (c) 2017-2020 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -27,6 +27,8 @@ import java.io.InputStream
 
 import com.google.inject.Guice
 
+import grizzled.slf4j.Logging
+
 import net.codingwell.scalaguice.InjectorExtensions._
 
 import org.apache.hadoop.fs.Path
@@ -50,8 +52,6 @@ import org.bdgenomics.convert.bdgenomics.BdgenomicsModule
 import org.bdgenomics.formats.avro.Feature
 import org.bdgenomics.formats.avro.Read
 import org.bdgenomics.formats.avro.Sequence
-
-import org.bdgenomics.utils.misc.Logging
 
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException
 
@@ -158,10 +158,10 @@ class BiojavaAdamContext
    * @throws IOException if an I/O error occurs
    */
   def loadBiojavaFastqReads(path: String): ReadDataset = {
-    log.info(s"Loading $path in FASTQ format as reads with Biojava...")
+    logger.info(s"Loading $path in FASTQ format as reads with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val fastqs = ac.sc.parallelize(readFastq(inputStream))
-      val reads = fastqs.map(readConverter.convert(_, ConversionStringency.STRICT, log))
+      val reads = fastqs.map(readConverter.convert(_, ConversionStringency.STRICT, logger.logger))
       ReadDataset(reads)
     }) match {
       case Success(r) => r
@@ -179,10 +179,10 @@ class BiojavaAdamContext
    * @throws IOException if an I/O error occurs
    */
   def loadBiojavaFastaDna(path: String): SequenceDataset = {
-    log.info(s"Loading $path in FASTA format as DNA sequences with Biojava...")
+    logger.info(s"Loading $path in FASTA format as DNA sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val dnaSequences = ac.sc.parallelize(readFastaDna(inputStream))
-      val sequences = dnaSequences.map(dnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      val sequences = dnaSequences.map(dnaSequenceConverter.convert(_, ConversionStringency.STRICT, logger.logger))
       SequenceDataset(sequences)
     }) match {
       case Success(s) => s
@@ -198,10 +198,10 @@ class BiojavaAdamContext
    * @throws IOException if an I/O error occurs
    */
   def loadBiojavaFastaProtein(path: String): SequenceDataset = {
-    log.info(s"Loading $path in FASTA format as protein sequences with Biojava...")
+    logger.info(s"Loading $path in FASTA format as protein sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val proteinSequences = ac.sc.parallelize(readFastaProtein(inputStream))
-      val sequences = proteinSequences.map(proteinSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      val sequences = proteinSequences.map(proteinSequenceConverter.convert(_, ConversionStringency.STRICT, logger.logger))
       SequenceDataset(sequences)
     }) match {
       case Success(s) => s
@@ -217,10 +217,10 @@ class BiojavaAdamContext
    * @throws IOException if an I/O error occurs
    */
   def loadBiojavaFastaRna(path: String): SequenceDataset = {
-    log.info(s"Loading $path in FASTA format as RNA sequences with Biojava...")
+    logger.info(s"Loading $path in FASTA format as RNA sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val rnaSequences = ac.sc.parallelize(readFastaRna(inputStream))
-      val sequences = rnaSequences.map(rnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      val sequences = rnaSequences.map(rnaSequenceConverter.convert(_, ConversionStringency.STRICT, logger.logger))
       SequenceDataset(sequences)
     }) match {
       case Success(s) => s
@@ -250,10 +250,10 @@ class BiojavaAdamContext
    * @throws IOException if an I/O error occurs
    */
   def loadBiojavaGenbankDna(path: String): SequenceDataset = {
-    log.info(s"Loading $path in Genbank format as DNA sequences with Biojava...")
+    logger.info(s"Loading $path in Genbank format as DNA sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val dnaSequences = ac.sc.parallelize(readGenbankDna(inputStream))
-      val sequences = dnaSequences.map(dnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      val sequences = dnaSequences.map(dnaSequenceConverter.convert(_, ConversionStringency.STRICT, logger.logger))
       SequenceDataset(sequences)
     }) match {
       case Success(s) => s
@@ -281,10 +281,10 @@ class BiojavaAdamContext
    * @throws Exception if an I/O error occurs
    */
   def loadBiojavaGenbankDnaFeatures(path: String): FeatureDataset = {
-    log.info(s"Loading $path in Genbank format as DNA sequence features with Biojava...")
+    logger.info(s"Loading $path in Genbank format as DNA sequence features with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val dnaSequences = ac.sc.parallelize(readGenbankDna(inputStream))
-      val features = dnaSequences.flatMap(dnaSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, log))
+      val features = dnaSequences.flatMap(dnaSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, logger.logger))
       FeatureDataset(features)
     }) match {
       case Success(f) => f
@@ -312,10 +312,10 @@ class BiojavaAdamContext
    * @throws IOException if an I/O error occurs
    */
   def loadBiojavaGenbankProtein(path: String): SequenceDataset = {
-    log.info(s"Loading $path in Genbank format as protein sequences with Biojava...")
+    logger.info(s"Loading $path in Genbank format as protein sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val proteinSequences = ac.sc.parallelize(readGenbankProtein(inputStream))
-      val sequences = proteinSequences.map(proteinSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      val sequences = proteinSequences.map(proteinSequenceConverter.convert(_, ConversionStringency.STRICT, logger.logger))
       SequenceDataset(sequences)
     }) match {
       case Success(s) => s
@@ -343,10 +343,10 @@ class BiojavaAdamContext
    * @throws Exception if an I/O error occurs
    */
   def loadBiojavaGenbankProteinFeatures(path: String): FeatureDataset = {
-    log.info(s"Loading $path in Genbank format as protein sequence features with Biojava...")
+    logger.info(s"Loading $path in Genbank format as protein sequence features with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val proteinSequences = ac.sc.parallelize(readGenbankProtein(inputStream))
-      val features = proteinSequences.flatMap(proteinSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, log))
+      val features = proteinSequences.flatMap(proteinSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, logger.logger))
       FeatureDataset(features)
     }) match {
       case Success(f) => f
@@ -374,10 +374,10 @@ class BiojavaAdamContext
    * @throws IOException if an I/O error occurs
    */
   def loadBiojavaGenbankRna(path: String): SequenceDataset = {
-    log.info(s"Loading $path in Genbank format as RNA sequences with Biojava...")
+    logger.info(s"Loading $path in Genbank format as RNA sequences with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val rnaSequences = ac.sc.parallelize(readGenbankRna(inputStream))
-      val sequences = rnaSequences.map(rnaSequenceConverter.convert(_, ConversionStringency.STRICT, log))
+      val sequences = rnaSequences.map(rnaSequenceConverter.convert(_, ConversionStringency.STRICT, logger.logger))
       SequenceDataset(sequences)
     }) match {
       case Success(s) => s
@@ -405,10 +405,10 @@ class BiojavaAdamContext
    * @throws Exception if an I/O error occurs
    */
   def loadBiojavaGenbankRnaFeatures(path: String): FeatureDataset = {
-    log.info(s"Loading $path in Genbank format as RNA sequence features with Biojava...")
+    logger.info(s"Loading $path in Genbank format as RNA sequence features with Biojava...")
     TryWith(openInputStream(path))(inputStream => {
       val rnaSequences = ac.sc.parallelize(readGenbankRna(inputStream))
-      val features = rnaSequences.flatMap(rnaSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, log))
+      val features = rnaSequences.flatMap(rnaSequenceFeaturesConverter.convert(_, ConversionStringency.STRICT, logger.logger))
       FeatureDataset(features)
     }) match {
       case Success(f) => f
