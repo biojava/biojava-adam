@@ -65,7 +65,7 @@
     <bdg-convert.version>0.10.0</bdg-convert.version>
     <biojava.version>5.4.0</biojava.version>
     <jdk.version>1.8</jdk.version>
-    <junit.version>4.12</junit.version>
+    <junit.version>4.13.1</junit.version>
     <maven.enforcer.jdk-version>[1.8,)</maven.enforcer.jdk-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
