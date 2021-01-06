@@ -63,7 +63,7 @@
   <properties>
     <adam.version>0.32.0</adam.version>
     <bdg-convert.version>0.10.0</bdg-convert.version>
-    <biojava.version>5.3.0</biojava.version>
+    <biojava.version>5.4.0</biojava.version>
     <jdk.version>1.8</jdk.version>
     <junit.version>4.12</junit.version>
     <maven.enforcer.jdk-version>[1.8,)</maven.enforcer.jdk-version>
