@@ -35,13 +35,13 @@ import org.apache.hadoop.fs.Path
 
 import org.apache.hadoop.io.compress.CompressionCodecFactory
 
-import org.bdgenomics.adam.rdd.ADAMContext
+import org.bdgenomics.adam.ds.ADAMContext
 
-import org.bdgenomics.adam.rdd.feature.FeatureDataset
+import org.bdgenomics.adam.ds.feature.FeatureDataset
 
-import org.bdgenomics.adam.rdd.read.ReadDataset
+import org.bdgenomics.adam.ds.read.ReadDataset
 
-import org.bdgenomics.adam.rdd.sequence.SequenceDataset
+import org.bdgenomics.adam.ds.sequence.SequenceDataset
 
 import org.bdgenomics.convert.Converter
 import org.bdgenomics.convert.ConversionException

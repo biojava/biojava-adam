@@ -61,16 +61,16 @@
     </license>
   </licenses>
   <properties>
-    <adam.version>0.33.0</adam.version>
+    <adam.version>0.34.0</adam.version>
     <bdg-convert.version>0.10.0</bdg-convert.version>
     <biojava.version>5.4.0</biojava.version>
     <jdk.version>1.8</jdk.version>
-    <junit.version>4.13.1</junit.version>
+    <junit.version>4.13.2</junit.version>
     <maven.enforcer.jdk-version>[1.8,)</maven.enforcer.jdk-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
     <scala-guice.version>4.2.6</scala-guice.version>
-    <scala.version>2.12.8</scala.version>
+    <scala.version>2.12.10</scala.version>
     <scala.version.prefix>2.12</scala.version.prefix>
     <slf4j.version>1.7.30</slf4j.version>
     <spark.version>3.0.2</spark.version>
@@ -332,7 +332,7 @@
       </dependency>
       <dependency>
         <groupId>org.bdgenomics.adam</groupId>
-        <artifactId>adam-assembly-spark2_${scala.version.prefix}</artifactId>
+        <artifactId>adam-assembly-spark3_${scala.version.prefix}</artifactId>
         <version>${adam.version}</version>
       </dependency>
       <dependency>
@@ -413,7 +413,7 @@
     </dependency>
     <dependency>
       <groupId>org.bdgenomics.adam</groupId>
-      <artifactId>adam-assembly-spark2_${scala.version.prefix}</artifactId>
+      <artifactId>adam-assembly-spark3_${scala.version.prefix}</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
