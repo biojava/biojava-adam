@@ -61,8 +61,8 @@
     </license>
   </licenses>
   <properties>
-    <adam.version>0.34.0</adam.version>
-    <bdg-convert.version>0.10.0</bdg-convert.version>
+    <adam.version>0.35.0</adam.version>
+    <bdg-convert.version>0.11.0</bdg-convert.version>
     <biojava.version>5.4.0</biojava.version>
     <jdk.version>1.8</jdk.version>
     <junit.version>4.13.2</junit.version>
@@ -80,7 +80,7 @@
       <plugins>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -88,7 +88,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>3.8.1</version>
           <configuration>
             <source>${jdk.version}</source>
             <target>${jdk.version}</target>
@@ -100,7 +100,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.0.0-M2</version>
+          <version>3.0.0-M3</version>
         </plugin>
         <plugin>
           <artifactId>maven-gpg-plugin</artifactId>
@@ -112,40 +112,40 @@
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.1.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.5.3</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-shade-plugin</artifactId>
           <version>3.2.0</version>
         </plugin>
         <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>3.0.0-M1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.2.4</version>
+        </plugin>
+        <plugin>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.5.1</version>
+          <version>3.9.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.2.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M3</version>
+          <version>3.0.0-M5</version>
         </plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>scala-maven-plugin</artifactId>
-          <version>3.2.2</version>
+          <version>4.4.1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -258,9 +258,9 @@
           </jvmArgs>
           <javacArgs>
             <javacArg>-source</javacArg>
-            <javacArg>${java.version}</javacArg>
+            <javacArg>${jdk.version}</javacArg>
             <javacArg>-target</javacArg>
-            <javacArg>${java.version}</javacArg>
+            <javacArg>${jdk.version}</javacArg>
           </javacArgs>
         </configuration>
       </plugin>
@@ -445,7 +445,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-enforcer-plugin</artifactId>
-            <version>3.0.0-M2</version>
+            <version>3.0.0-M3</version>
           </plugin>
           <plugin>
             <artifactId>maven-gpg-plugin</artifactId>
@@ -453,15 +453,15 @@
           </plugin>
           <plugin>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>3.1.2</version>
+            <version>3.2.0</version>
           </plugin>
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
           </plugin>
           <plugin>
             <artifactId>maven-source-plugin</artifactId>
-            <version>3.0.1</version>
+            <version>3.2.1</version>
           </plugin>
         </plugins>
       </build>
