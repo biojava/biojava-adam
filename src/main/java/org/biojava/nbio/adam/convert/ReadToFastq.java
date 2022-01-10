@@ -1,7 +1,7 @@
 /*
 
     biojava-adam  Biojava and ADAM integration.
-    Copyright (c) 2017-2021 held jointly by the individual authors.
+    Copyright (c) 2017-2022 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -26,7 +26,6 @@ package org.biojava.nbio.adam.convert;
 import javax.annotation.concurrent.Immutable;
 
 import org.bdgenomics.convert.AbstractConverter;
-import org.bdgenomics.convert.Converter;
 import org.bdgenomics.convert.ConversionException;
 import org.bdgenomics.convert.ConversionStringency;
 
@@ -72,11 +71,8 @@ final class ReadToFastq extends AbstractConverter<Read, Fastq> {
                 .withVariant(FastqVariant.FASTQ_SANGER)
                 .build();
         }
-        catch (NullPointerException e) {
+        catch (NullPointerException | IllegalArgumentException e) {
             warnOrThrow(read, "could not convert read", e, stringency, logger); 
-        }
-        catch (IllegalArgumentException e) {
-            warnOrThrow(read, "could not convert read", e, stringency, logger);
         }
         return fastq;
     }
