@@ -1,7 +1,7 @@
 /*
 
     biojava-adam  Biojava and ADAM integration.
-    Copyright (c) 2017-2021 held jointly by the individual authors.
+    Copyright (c) 2017-2022 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -32,11 +32,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 
 import org.bdgenomics.convert.Converter;
-import org.bdgenomics.convert.ConversionStringency;
 
-import org.bdgenomics.formats.avro.Dbxref;
 import org.bdgenomics.formats.avro.Feature;
-import org.bdgenomics.formats.avro.OntologyTerm;
 import org.bdgenomics.formats.avro.Read;
 import org.bdgenomics.formats.avro.Sequence;
 import org.bdgenomics.formats.avro.Strand;

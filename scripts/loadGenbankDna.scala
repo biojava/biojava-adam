@@ -1,7 +1,7 @@
 /*
 
     biojava-adam  BioJava and ADAM integration.
-    Copyright (c) 2017-2021 held jointly by the individual authors.
+    Copyright (c) 2017-2022 held jointly by the individual authors.
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as published
@@ -34,7 +34,7 @@ val bac = BiojavaAdamContext(sc)
 val inputPath = Option(System.getenv("INPUT"))
 val outputPath = Option(System.getenv("OUTPUT"))
 
-if (!inputPath.isDefined || !outputPath.isDefined) {
+if (inputPath.isEmpty || outputPath.isEmpty) {
   logger.error("INPUT and OUTPUT environment variables are required")
   System.exit(1)
 }
