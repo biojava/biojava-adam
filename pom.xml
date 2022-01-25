@@ -61,7 +61,7 @@
     </license>
   </licenses>
   <properties>
-    <adam.version>0.36.0</adam.version>
+    <adam.version>0.37.0</adam.version>
     <bdg-convert.version>0.12.0</bdg-convert.version>
     <biojava.version>6.0.4</biojava.version>
     <jdk.version>1.8</jdk.version>
@@ -69,11 +69,11 @@
     <maven.enforcer.jdk-version>[1.8,)</maven.enforcer.jdk-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-    <scala-guice.version>4.2.6</scala-guice.version>
-    <scala.version>2.12.10</scala.version>
+    <scala-guice.version>5.0.1</scala-guice.version>
+    <scala.version>2.12.15</scala.version>
     <scala.version.prefix>2.12</scala.version.prefix>
     <slf4j.version>1.7.30</slf4j.version>
-    <spark.version>3.1.2</spark.version>
+    <spark.version>3.2.0</spark.version>
   </properties>
   <build>
     <pluginManagement>
@@ -343,10 +343,6 @@
           <exclusion>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
           </exclusion>
           <exclusion>
             <groupId>org.apache.avro</groupId>
